@@ -11,6 +11,7 @@
 
 uint16_t last_keycode;
 
+// Custom keycode definitions found in cygnus.h
 
 ///////////////////////////////////////////////////////////////////////////////
 // Tap Dance (https://docs.qmk.fm/features/tap_dance)
@@ -130,12 +131,13 @@ uint8_t NUM_CUSTOM_SHIFT_KEYS =
 // Combos (https://docs.qmk.fm/features/combo)
 ///////////////////////////////////////////////////////////////////////////////
 
-// Pipe combo for compose key
+// Punctuation and function
 #define HD_pipe_keys      HD_A, HD_E // Type "|"
 #define HD_Screencap_keys HD_A, HD_I // Capture screen
 #define HD_wcap_keys      HD_T, HD_A // Toggle caps word
 #define HD_ques_keys      HD_SLSH, HD_DQUO // ?
 #define HD_exlm_keys      HD_DOT, HD_SLSH // !
+#define HD_guilmet_keys HD_DQUO, HD_QUOT // « | »
 
 // h digraph combos - all use original key + neighbor
 #define HD_Th_keys HD_T, HD_N // Type "th"
@@ -157,6 +159,7 @@ const uint16_t PROGMEM Hexlm_combo[]     = {HD_exlm_keys, COMBO_END}; // !
 const uint16_t PROGMEM Hques_combo[]     = {HD_ques_keys, COMBO_END}; // ?
 const uint16_t PROGMEM Pipe_combo[]      = {HD_pipe_keys, COMBO_END}; // |
 const uint16_t PROGMEM Screencap_combo[] = {HD_Screencap_keys, COMBO_END}; // Screen Capture
+const uint16_t PROGMEM Guilmet_combo[]   = {HD_guilmet_keys, COMBO_END}; // « | »
 // H digraph combos (these are mnemonically arranged- first letter + neighbor)
 const uint16_t PROGMEM H_Th_combo[]  = {HD_Th_keys, COMBO_END}; // TYPE "th"
 const uint16_t PROGMEM H_Ch_combo[]  = {HD_Ch_keys, COMBO_END}; // TYPE "ch"
@@ -176,6 +179,7 @@ combo_t key_combos[] = {
     COMBO(Hexlm_combo, HC_EXLM), // !
     COMBO(Hques_combo, HC_QUES), // ?
     COMBO(Pipe_combo, HC_PIPE), // |
+    COMBO(Guilmet_combo, HC_GLMETS), // « | »
     // H bigrams
     COMBO(H_Ch_combo, HC_CH),
     COMBO(H_Sch_combo, HC_SCH),
@@ -217,6 +221,13 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         tap_code16(KC_PIPE);
       }
       break;
+    case HC_GLMETS:
+        if (pressed) {
+            SEND_STRING("«  »");
+            tap_code16(KC_LEFT);
+            tap_code16(KC_LEFT);
+        }
+        break;        
     case HC_CH:
       if (pressed) {
         SEND_STRING("ch");

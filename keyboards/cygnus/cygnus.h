@@ -14,6 +14,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     // Combo Definitions
     HC_SCAP,
     HC_CW_TOGG,
+    HC_GLMETS,
     HC_EXLM,
     HC_QUES,
     HC_PIPE,
