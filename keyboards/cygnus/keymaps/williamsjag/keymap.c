@@ -105,7 +105,58 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_DOT] = ACTION_TAP_DANCE_FN_ADVANCED(sentence_end, sentence_end_finished, NULL),
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Hands Down Adaptive Keys (https://sites.google.com/alanreiser.com/handsdown/home/hands-down-neu)
+///////////////////////////////////////////////////////////////////////////////
 
+// define variables used
+uint16_t preprior_keycode = KC_NO;
+uint16_t prior_keycode = KC_NO;
+uint16_t prior_keydown = 0; // timer of keydown for adaptive threshhold.
+uint8_t  saved_mods;
+
+// https://github.com/moutis/HandsDown/blob/main/handsdown/vx-adaptive.c
+// https://github.com/moutis/HandsDown/blob/main/handsdown/adapt_h.c
+
+bool process_adaptive_key(uint16_t keycode, const keyrecord_t *record) {
+    bool return_state = true; // assume we don't do anything.
+    
+    // Check for adaptive context
+    if (timer_elapsed(prior_keydown) > ADAPTIVE_TERM) { // outside adaptive threshhold
+        prior_keycode = preprior_keycode = prior_keydown = 0; // turn off Adaptives.
+        return true; // no adaptive conditions, so return.
+    }
+
+    // K, this could be adaptive, so process.
+    saved_mods = get_mods();
+
+    switch (keycode) { // process ignoring multi-function keys & shift state?
+        case KC_H: // H precedes a vowel much more often than it follows (thanks, Ancient Greek!) so adaptive H is a sort of Magic Key
+            switch (prior_keycode) {
+                case KC_A:
+                    tap_code(KC_U); // "AH" yields "AU" (7x more common)
+                    return_state = false; // done.
+                    break;
+                case KC_U: //
+                        tap_code(KC_A); // "UH" yields "UA" (126x more common)
+                    return_state = false; // done.
+                    break;
+                case KC_E: // these EO/OE adaptives are of questionable value
+                    tap_code(KC_O); // "EH" yields "EO" (1.75:1)
+                    return_state = false; // done.
+                    break;
+                case KC_O:
+                    tap_code(KC_E); // "OH" yields "OE" (almost 1:1, but eliminates an SFB?)
+                    return_state = false; // done.
+                    break;
+            }
+    }
+    if (return_state) { // no adaptive processed, cancel state and pass it on.
+        set_mods(saved_mods);
+        prior_keycode = preprior_keycode = keycode = 0;
+    }
+    return return_state;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Custom shift keys (https://getreuer.info/posts/keyboards/custom-shift-keys)
@@ -316,13 +367,14 @@ uint16_t achordion_streak_chord_timeout(
 }
 
 
-
+///////////////////////////////////////////////////////////////////////////////
+// process_record_user
+///////////////////////////////////////////////////////////////////////////////
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Save mod state for later use
     uint8_t mod_state = get_mods();
     uint8_t oneshot_mod_state = get_oneshot_mods();
-
 
     // Process achordion to determine holds
    
@@ -624,6 +676,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
 
     }  
+
+    // process adaptive keys - move earlier ??
+    if (!process_adaptive_key(keycode, record)) {
+            prior_keydown = timer_read(); // (re)start prior_key timing
+            preprior_keycode = prior_keycode; // look back 2 keystrokes?
+            prior_keycode = keycode; // this keycode is stripped of mods+taps
+            return false; // took care of that key
+        }
     return true;
 }
 

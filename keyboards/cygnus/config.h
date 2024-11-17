@@ -28,6 +28,8 @@ see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_TOGGLE 2
 #define TAPPING_TERM 170
+// https://github.com/moutis/HandsDown/blob/main/moutis.h
+#define ADAPTIVE_TERM (TAPPING_TERM/4) // rolling threshold for adaptive keys
 
 /* Home row mods */
 #define TAP_CODE_DELAY 10
