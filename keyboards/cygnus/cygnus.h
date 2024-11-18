@@ -21,6 +21,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     BSPCEV_EVERY,
     BSPCH_HERE,
     BSPCIT_IN_THE,
+    DCOM,
+    DFR,
     HC_CH,
     HC_SCH,
     HC_GH,

@@ -243,9 +243,11 @@ uint8_t NUM_CUSTOM_SHIFT_KEYS =
 #define HD_Sch_keys HD_S, HD_C, HD_N // Type "sch"
 
 // Common words
-#define every_keys KC_BSPC, HD_E // Type "every"
-#define here_keys KC_BSPC, HD_H // Type "here"
+#define every_keys  KC_BSPC, HD_E // Type "every"
+#define here_keys   KC_BSPC, HD_H // Type "here"
 #define in_the_keys KC_BSPC, HD_I, HD_T // Type "in the"
+#define dcom_keys    HD_U,    HD_O // Type ".com"
+#define dfr_keys     HD_O,    HD_Y // Type ".fr"
 
 // These definitions based on Hands Down Neu & variations
 const uint16_t PROGMEM Caps_word_combo[] = {HD_wcap_keys, COMBO_END}; // Toggle Caps Word
@@ -266,6 +268,8 @@ const uint16_t PROGMEM H_Sch_combo[] = {HD_Sch_keys, COMBO_END}; // TYPE "Sch"
 const uint16_t PROGMEM BSPC_E_COMBO[]   = {every_keys,  COMBO_END};
 const uint16_t PROGMEM BSPC_H_COMBO[]   = {here_keys,   COMBO_END};
 const uint16_t PROGMEM BSPC_I_COMBO[]   = {in_the_keys, COMBO_END};
+const uint16_t PROGMEM DCOM_COMBO[]   = {dcom_keys, COMBO_END};
+const uint16_t PROGMEM DFR_COMBO[]   = {dfr_keys, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(Screencap_combo, HC_SCAP),
@@ -282,10 +286,12 @@ combo_t key_combos[] = {
     COMBO(H_Th_combo, HC_TH),
     COMBO(H_Sh_combo, HC_SH),
     COMBO(H_Wh_combo, HC_WH),
-    // Backspace combos
+    // Common word combos
     COMBO(BSPC_E_COMBO, BSPCEV_EVERY),
     COMBO(BSPC_H_COMBO, BSPCH_HERE),
     COMBO(BSPC_I_COMBO, BSPCIT_IN_THE),
+    COMBO(DCOM_COMBO, DCOM),
+    COMBO(DFR_COMBO, DFR),
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -373,6 +379,16 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     case BSPCIT_IN_THE:
         if (pressed) {
             SEND_STRING("in the");
+        }
+    break;
+    case DCOM:
+        if (pressed) {
+            SEND_STRING(".com");
+        }
+    break;
+    case DFR:
+        if (pressed) {
+            SEND_STRING(".fr");
         }
     break;
   }
