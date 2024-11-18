@@ -338,53 +338,67 @@ Complete list:
         <td>
             TN  ->  TH
         </td>
-        <td>
-            ⌫E  ->  every
-        </td>
     </tr>               
     <tr>
         <td>
             SN  ->  SH              
         </td>
-        <td>
-            ⌫H  ->  here
-        </td> 
     </tr>
     <tr>               
         <td>
             CS  ->  CH              
-        </td>
-        <td>
-            ⌫I  ->  in the
         </td>
     </tr>
     <tr>                
         <td>
             WX  ->  WH
         </td>
-        <td>
-            UO  ->  .com
-        </td>
     <tr>
         <td>    
             PF  ->  PH            
-        </td>
-        <td>
-            OY  ->  .fr
         </td>
     </tr>
     <tr>               
         <td>
             GM  ->  GH
         </td>
-        <td>
-            ./  ->  !
-        </td>
     </tr>
     <tr>               
         <td>
             CSN ->  SCH            
         </td>
+    </tr>
+    <tr>
+        <td>
+            ⌫E  ->  every
+        </td>
+    </tr>
+    <tr>
+        <td>
+            ⌫H  ->  here
+        </td>
+    </tr> 
+    <tr>
+        <td>
+            ⌫I  ->  in the
+        </td>
+    </tr>
+    <tr>
+        <td>
+            UO  ->  .com
+        </td>
+    </tr>
+    <tr>
+        <td>
+            OY  ->  .fr
+        </td>
+    </tr>
+    <tr>
+        <td>
+            ./  ->  !
+        </td>
+    </tr>
+    <tr>
         <td>
              /"  ->  ?
         </td>
@@ -409,6 +423,7 @@ Complete list:
             AE  ->  | (Substitute for compose key using Espanso- expansions listed below)
         </td>
     </tr>
+    
 </table>
                         
                         
@@ -423,49 +438,78 @@ Highlights:
         <td>
             HD_QU       types 'qu' when tapped and 'q' when held
         </td>
+    </tr>
+    <tr>
         <td>
             HN_EQL      Shift = types != in the number layer
         </td>
+    </tr>
+    <tr>
         <td>
             UPDIR       types '../'
         </td>
+    </tr>
+    <tr>
         <td>
             SELW_R      Selects the word to the right of the cursor
         </td>
+    </tr>
+    <tr>
         <td>
             SELW_L      Same but to the left
         </td>
+    </tr>
+    <tr>
         <td>
             SELLINE     Selects the current line
         </td>
+    </tr>
+    <tr>
         <td>
             HS_LABK     Shift < types '<=' in the symbol layer
         </td>
+    </tr>
+    <tr>
         <td>
             HS_RABK     Shift > types '>=' in the symbol layer
         </td>
+    </tr>
+    <tr>
         <td>
             Buttons for browser forward and back
         </td>
+    </tr>
+    <tr>
         <td>
             Shifted Arrow keys in Num layer are mouse movements
         </td>
+    </tr>
+    <tr>
         <td>
             Shifted Home and End in Num layer are left/right click
         </td>
+    </tr>
+    <tr>
         <td>
             Buttons for undo/redo/cut/copy/paste/paste and match style
         </td>
+    </tr>
+    <tr>
         <td>
             Buttons for mouse scroll wheel up and down
         </td>
+    </tr>
+    <tr>
         <td>
             Buttons for zoom in/zoom out/reset zoom
         </td>
+    </tr>
+    <tr>
         <td>
             Buttons for snap window left or right in Magnet
         </td>
-
+    </tr>
+</table>
      
                         
                        
