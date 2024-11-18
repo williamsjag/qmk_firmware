@@ -335,6 +335,16 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
   }
 }
 
+// Custom combo timing
+uint16_t get_combo_term(uint16_t index, combo_t *combo) {
+    switch (index) {
+        case HC_PIPE:
+            return 30;
+        case HC_SCAP:
+            return 30;
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Achordion (https://getreuer.info/posts/keyboards/achordion)
 ///////////////////////////////////////////////////////////////////////////////
