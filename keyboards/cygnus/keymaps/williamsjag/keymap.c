@@ -150,7 +150,7 @@ bool process_adaptive_key(uint16_t keycode, const keyrecord_t *record) {
                     return_state = false; // done.
                     break;
             }
-        case (HD_HASH) { // Magic HD_HASH
+        case HD_HASH: // Magic HD_HASH
             switch (prior_keycode) {
                 case HD_D: // "does"
                     SEND_STRING("oes");
@@ -193,7 +193,6 @@ bool process_adaptive_key(uint16_t keycode, const keyrecord_t *record) {
                     return_state = false;
                     break;
             }
-        }
     }
     if (return_state) { // no adaptive processed, cancel state and pass it on.
         set_mods(saved_mods);
@@ -387,6 +386,7 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case HC_SCAP:
             return 30;
     }
+    return COMBO_TERM;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
