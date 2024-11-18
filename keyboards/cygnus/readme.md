@@ -111,7 +111,7 @@ Notice also the controller configuration and formatting of pinouts in info.json:
     },
 ```
 
-I wired the rows top to bottom, and the columns outside->in according to juhakaup's diagram:
+I wired the rows top to bottom, and the columns outside->in according to juhakaup's diagram, but wired to the pins named above:
 <p align="center">
 <img src="https://github.com/juhakaup/keyboards/blob/main/Cygnus%20v1.0/img/4x6wiring.jpg" alt="wiring diagram" style="width:600px;"/>
 </p>
@@ -226,7 +226,7 @@ Complete list:
             3 taps
         </td>
         <td>
-            Toggle QWERTY and HD layers
+            Toggle QWERTY and HD layers, typing and deleting the layer name as visual confirmation
         </td>
     </tr>
     <tr>
@@ -332,37 +332,142 @@ Complete list:
 
 Pressing two or more keys together to output something different. I use combos for some punctuation not present on the base layer, *h bigrams, and som common words and endings.
 
-Complete list:          TN  ->  TH              ⌫E  ->  every
-                        SN  ->  SH              ⌫H  ->  here
-                        CS  ->  CH              ⌫I  ->  in the
-                        WX  ->  WH              UO  ->  .com
-                        PF  ->  PH              OY  ->  .fr
-                        GM  ->  GH              ./  ->  !
-                        CSN ->  SCH             /"  ->  ?
-                        "'  ->  « | » (Pipe represents cursor position)
-                        TA  ->  Toggle Caps Word
-                        AI  ->  Screen capture drag box (full screen when shifted)
-                        AE  ->  | (Substitute for compose key using Espanso- expansions listed below)
-
+Complete list:
+<table>
+    <tr>
+        <td>
+            TN  ->  TH
+        </td>
+        <td>
+            ⌫E  ->  every
+        </td>
+    </tr>               
+    <tr>
+        <td>
+            SN  ->  SH              
+        </td>
+        <td>
+            ⌫H  ->  here
+        </td> 
+    </tr>
+    <tr>               
+        <td>
+            CS  ->  CH              
+        </td>
+        <td>
+            ⌫I  ->  in the
+        </td>
+    </tr>
+    <tr>                
+        <td>
+            WX  ->  WH
+        </td>
+        <td>
+            UO  ->  .com
+        </td>
+    <tr>
+        <td>    
+            PF  ->  PH            
+        </td>
+        <td>
+            OY  ->  .fr
+        </td>
+    </tr>
+    <tr>               
+        <td>
+            GM  ->  GH
+        </td>
+        <td>
+            ./  ->  !
+        </td>
+    </tr>
+    <tr>               
+        <td>
+            CSN ->  SCH            
+        </td>
+        <td>
+             /"  ->  ?
+        </td>
+    </tr>
+    <tr>
+        <td>
+            "'  ->  « | » (Pipe represents cursor position)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            TA  ->  Toggle Caps Word
+        </td>
+    </tr>
+    <tr>
+        <td>
+            AI  ->  Screen capture drag box (full screen when shifted)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            AE  ->  | (Substitute for compose key using Espanso- expansions listed below)
+        </td>
+    </tr>
+</table>
+                        
+                        
+                        
 ### Custom Keys
 
 Several custom keys and their behaviors are defined in process_record_user in keymap.c.
 
-Highlights:             HD_QU       types 'qu' when tapped and 'q' when held
-                        HN_EQL      Shift = types != in the number layer
-                        UPDIR       types '../'
-                        SELW_R      Selects the word to the right of the cursor
-                        SELW_L      Same but to the left
-                        SELLINE     Selects the current line
-                        HS_LABK     Shift < types '<=' in the symbol layer
-                        HS_RABK     Shift > types '>=' in the symbol layer
-                        Buttons for browser forward and back
-                        Shifted Arrow keys in Num layer are mouse movements
-                        Shifted Home and End in Num layer are left/right click
-                        Buttons for undo/redo/cut/copy/paste/paste and match style
-                        Buttons for mouse scroll wheel up and down
-                        Buttons for zoom in/zoom out/reset zoom
-                        Buttons for snap window left or right in Magnet
+Highlights:             
+<table>
+    <tr>
+        <td>
+            HD_QU       types 'qu' when tapped and 'q' when held
+        </td>
+        <td>
+            HN_EQL      Shift = types != in the number layer
+        </td>
+        <td>
+            UPDIR       types '../'
+        </td>
+        <td>
+            SELW_R      Selects the word to the right of the cursor
+        </td>
+        <td>
+            SELW_L      Same but to the left
+        </td>
+        <td>
+            SELLINE     Selects the current line
+        </td>
+        <td>
+            HS_LABK     Shift < types '<=' in the symbol layer
+        </td>
+        <td>
+            HS_RABK     Shift > types '>=' in the symbol layer
+        </td>
+        <td>
+            Buttons for browser forward and back
+        </td>
+        <td>
+            Shifted Arrow keys in Num layer are mouse movements
+        </td>
+        <td>
+            Shifted Home and End in Num layer are left/right click
+        </td>
+        <td>
+            Buttons for undo/redo/cut/copy/paste/paste and match style
+        </td>
+        <td>
+            Buttons for mouse scroll wheel up and down
+        </td>
+        <td>
+            Buttons for zoom in/zoom out/reset zoom
+        </td>
+        <td>
+            Buttons for snap window left or right in Magnet
+        </td>
+
+     
+                        
                        
 ### Achordion
 
