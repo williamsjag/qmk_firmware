@@ -131,25 +131,69 @@ bool process_adaptive_key(uint16_t keycode, const keyrecord_t *record) {
     saved_mods = get_mods();
 
     switch (keycode) { // process ignoring multi-function keys & shift state?
-        case KC_H: // H precedes a vowel much more often than it follows (thanks, Ancient Greek!) so adaptive H is a sort of Magic Key
+        case HD_H: // H precedes a vowel much more often than it follows (thanks, Ancient Greek!) so adaptive H is a sort of Magic Key
             switch (prior_keycode) {
-                case KC_A:
+                case HD_A:
                     tap_code(KC_U); // "AH" yields "AU" (7x more common)
                     return_state = false; // done.
                     break;
-                case KC_U: //
-                        tap_code(KC_A); // "UH" yields "UA" (126x more common)
+                case HD_U: //
+                    tap_code(KC_A); // "UH" yields "UA" (126x more common)
                     return_state = false; // done.
                     break;
-                case KC_E: // these EO/OE adaptives are of questionable value
+                case HD_E: // these EO/OE adaptives are of questionable value
                     tap_code(KC_O); // "EH" yields "EO" (1.75:1)
                     return_state = false; // done.
                     break;
-                case KC_O:
+                case HD_O:
                     tap_code(KC_E); // "OH" yields "OE" (almost 1:1, but eliminates an SFB?)
                     return_state = false; // done.
                     break;
             }
+        case (HD_HASH) { // Magic HD_HASH
+            switch (prior_keycode) {
+                case HD_D: // "does"
+                    SEND_STRING("oes");
+                    return_state = false;
+                    break;
+                case HD_F: // "for"
+                    SEND_STRING("or");
+                    return_state = false;
+                    break;
+                case HD_H: // "have"
+                    SEND_STRING("ave");
+                    return_state = false;
+                    break;
+                case HD_J: // "just"
+                    SEND_STRING("ust");
+                    return_state = false;
+                    break;
+                case HD_K: // "know"
+                    SEND_STRING("now");
+                    return_state = false;
+                    break;
+                case HD_M: // "ment"
+                    SEND_STRING("ent");
+                    return_state = false;
+                    break;
+                case HD_S: // "sion"
+                    SEND_STRING("ion");
+                    return_state = false;
+                    break;
+                case HD_T: // "tion"
+                    SEND_STRING("ion");
+                    return_state = false;
+                    break;
+                case HD_W: // "williams"
+                    SEND_STRING("illiams");
+                    return_state = false;
+                    break;
+                case HD_SPC: // "and"
+                    SEND_STRING("and");
+                    return_state = false;
+                    break;
+            }
+        }
     }
     if (return_state) { // no adaptive processed, cancel state and pass it on.
         set_mods(saved_mods);
@@ -684,6 +728,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_mods(MOD_BIT(KC_LSFT));
             }
             return false;
+        case UNAME:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("williamsjag@gmail.com");
+                    register_mods(mod_state);
+                }
+                else {
+                    SEND_STRING("williamsjag");
+                }
+            }
 
     }  
 
@@ -779,7 +835,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                      KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TRNS, HD_QUOT, HS_LABK, HS_RABK, HD_DQUO, KC_NO,                        HD_QUES, UPDIR,   HD_LBRC, HD_RBRC, HD_PERC, KC_BSPC,
+      KC_TRNS, HD_QUOT, HS_LABK, HS_RABK, HD_DQUO, UNAME,                        HD_QUES, UPDIR,   HD_LBRC, HD_RBRC, HD_PERC, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_NO,   HD_EXLM, HD_MINS, HD_PLUS, HS_EQL,  HD_HASH,                      HD_PIPE, HS_COLN, HD_LPRN, HD_RPRN, HD_QUES, KC_NO,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|

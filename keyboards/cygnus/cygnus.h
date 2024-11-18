@@ -62,6 +62,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HD_COPY,
     HD_PSTE,
     HD_PSTM,
+    UNAME,
 };
 
 // Hands Down alphas with hold-taps and custom codes
