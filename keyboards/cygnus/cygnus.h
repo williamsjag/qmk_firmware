@@ -141,6 +141,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HS_EQL RSFT_T(HN_EQL)
 #define HS_COLN LSFT_T(HD_COLN)
 #define HD_SCAP LGUI(LSFT(4))
+#define HD_FSCAP LGUI(LSFT(3))
 
 // Tap Dance keys
 // Tap Dance definitions
