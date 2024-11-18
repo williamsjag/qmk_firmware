@@ -10,13 +10,15 @@ This is my build of juhakaup's excellent [Cygnus](https://github.com/juhakaup/ke
 
 Compile example for this keyboard (after setting up your build environment and moving cygnus folder into qmk_firmware/keyboards):
 
-    `qmk compile -kb cygnus -km default`
+    qmk compile -kb cygnus -km default
 
-Flashing example for this keyboard:
 
-    drag to usb storage of controller in boot mode
+Flashing this keyboard: drag uf2 file to usb storage of controller in boot mode
+
+
 
 See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
+
 
 
 ## Differences from Cygnus v1.0
@@ -25,8 +27,17 @@ See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_to
 
 I chose to print the case using resin instead of a thermoplastic in order to avoid layer lines. Because it's a thermosetting plastic you can't use heat-set inserts without damaging the material. Instead, I used Injection Molding insert nuts (not exactly the best option but I really struggled to find a real press-in insert that fit both the screws and the holes).
 
-        Injection Molding Brass Knurled Thread Inserts Nuts       [Aliexpress](https://www.aliexpress.com/item/1005004001886100.html?spm=a2g0o.order_list.order_list_main.41.46f51802OmCO8M)
-        Length 5mm, M3x OD4mm
+<table>
+    <tr>
+        <td>
+            Injection Molding Brass Knurled Thread Insert Nuts <br>
+            Length 5mm, M3x OD4mm
+        </td>
+        <td>
+            [Aliexpress](https://www.aliexpress.com/item/1005004001886100.html?spm=a2g0o.order_list.order_list_main.41.46f51802OmCO8M)
+        </td>
+    </tr>
+</table>
 
 I softened the plastic of the case holes by warming them up 10-15 seconds with a hair dryer, then pressed the inserts in place using a cold soldering iron. It takes some effort to get them in; a few times I had to reheat the area for a few seconds once the nut was wedged in the hole, and then they slid in pretty easily.
 
@@ -38,7 +49,16 @@ Because of the brittleness of resin prints, I used the blow dryer treatment befo
 
 I chose this controller mainly because I didn't want to be concerned about the size of my firmware. As a bonus it's cheaper.
 
-        2x RP2040-zero Controller                                   [Aliexpress](https://www.aliexpress.com/item/1005004281549886.html?spm=a2g0o.order_list.order_list_main.29.46f51802OmCO8M)
+<table>
+    <tr>
+        <td>
+            2x RP2040-zero Controller
+        </td>
+        <td>
+            [Aliexpress](https://www.aliexpress.com/item/1005004281549886.html?spm=a2g0o.order_list.order_list_main.29.46f51802OmCO8M)
+        </td>
+    </tr>
+</table>
 
 This doesn't change much apart from the fact that due to its small size, there’s no RUN pin to attach a reset button. Instead, I wired the reset switch to the ground pin (shared with the TRRS socket), and GP29, then set up GP29 to reset the keyboard when held 2 seconds in qmk:
 
@@ -74,7 +94,6 @@ void matrix_scan_user(void) {
 
 My keymap is also equipped with a tapdance key that resets the keyboard on 5 taps.
 
-```
 
 Notice also the controller configuration and formatting of pinouts in info.json: 
 ```json
@@ -89,18 +108,20 @@ Notice also the controller configuration and formatting of pinouts in info.json:
         "rows": ["GP28", "GP27", "GP26", "GP15", "GP14"]
     },
 ```
-I wired the rows top to bottom, and the columns outside->in according to the [juhakaup's diagram](https://github.com/juhakaup/keyboards/blob/main/Cygnus%20v1.0/img/4x6wiring.jpg)
+
+I wired the rows top to bottom, and the columns outside->in according to juhakaup's diagram:
+<a href="https://github.com/juhakaup/keyboards/blob/main/Cygnus%20v1.0/img/4x6wiring.jpg"
 
 Other rp2040-zero specific qmk setup includes the following lines in rules.mk:
-```
-BOOTLOADER = rp2040
-BOARD = GENERIC_RP_RP2040
-SERIAL_DRIVER = vendor
-```
+
+    BOOTLOADER = rp2040
+    BOARD = GENERIC_RP_RP2040
+    SERIAL_DRIVER = vendor
+
 
 ### 4x6 Layout
 
-Layout macro is defined in info.json, layers are enumerated in cygnus.h, and keys are mapped in keymap.c. keymaps/default/keymap.c is a single layer of basic QWERTY for those who would like to start from zero with a working layout. keymaps/williamsjag/keymap.c is my personal layout based on Hands Down Vibranium, explained in detail below.
+The layout macro is defined in info.json, layers are enumerated in cygnus.h, and keys are mapped in keymap.c. keymaps/default/keymap.c is a single layer of basic QWERTY for those who would like to start from zero with a working layout. keymaps/williamsjag/keymap.c is my personal layout based on Hands Down Vibranium, explained in detail below.
 
 
 ## Layout Features
@@ -114,22 +135,76 @@ For example the Mac screenshot command Shift(Command(4)) is executed with A(E(4)
 
 Changes the output of the second-pressed key of specified key pairs when pressed in quick succession. Type the sequence slightly slower to avoid this adjustment. There are 2 kinds of adaptive keys in my layout: sequences that exist to avoid common SFBs (AH->AU), and "magic hash" which uses the uncommonly-typed-after-a-character '#' as a sort of auto-complete for common words and endings (H#->have)
 
-Complete list:          AH  ->  AU              H#  ->  have
-                        EH  ->  EO              F#  ->  for
-                        UH  ->  UA              D#  ->  does
-                        OH  ->  OE              K#  ->  know
-                                                M#  ->  ment
-                                                S#  ->  sion
-                                                T#  ->  tion
-                                                W#  ->  williams
-                                                ␣#  ->  and
+Complete list:    
+<table>
+    <tr>
+        <td>      
+            AH -> AU
+        </td>
+        <td>
+            H# -> have
+        </td>
+    </tr>   
+    <tr>
+        <td>      
+            EH -> EO 
+        </td>
+        <td>
+            F# -> for    
+        </td>
+    </tr> 
+    <tr>
+        <td>      
+            UH -> UA      
+        </td>
+        <td>
+            K# -> know 
+        </td>
+    </tr>   
+    <tr>
+        <td>      
+            OH -> OE
+        </td>
+        <td>
+            D# -> does
+        </td>
+    </tr>    
+     <tr>
+        <td>
+            W# -> williams
+        </td>
+        <td>
+            M# -> ment
+        </td>
+    </tr>     
+    </tr>    
+     <tr>
+        <td>
+            ␣# -> and
+        </td>
+        <td>
+             S# -> sion
+        </td>
+    </tr>  
+    </tr>    
+     <tr>
+        <td>
+            T# -> tion
+        </td>
+        <td>
+           
+        </td>
+    </tr>
+</table>   
+                         
 
 
 ### Tap Dances
 
 Allows one key send multiple different actions depending on how may times it is tapped in quick succession.
 
-Complete list:          TD_ESC_LAYER_BOOT       1 tap       Escape
+Complete list:
+          TD_ESC_LAYER_BOOT       1 tap       Escape
                                                 3 taps      Toggle QWERTY and HD layers
                                                 5 taps      Reset keyboard to Bootloader
 
