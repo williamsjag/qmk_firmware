@@ -34,7 +34,7 @@ I chose to print the case using resin instead of a thermoplastic in order to avo
             Length 5mm, M3x OD4mm
         </td>
         <td>
-            [Aliexpress](https://www.aliexpress.com/item/1005004001886100.html?spm=a2g0o.order_list.order_list_main.41.46f51802OmCO8M)
+            <a href="https://www.aliexpress.com/item/1005004001886100.html?spm=a2g0o.order_list.order_list_main.41.46f51802OmCO8M">Aliexpress</a>
         </td>
     </tr>
 </table>
@@ -55,7 +55,7 @@ I chose this controller mainly because I didn't want to be concerned about the s
             2x RP2040-zero Controller
         </td>
         <td>
-            [Aliexpress](https://www.aliexpress.com/item/1005004281549886.html?spm=a2g0o.order_list.order_list_main.29.46f51802OmCO8M)
+            <a href="https://www.aliexpress.com/item/1005004281549886.html?spm=a2g0o.order_list.order_list_main.29.46f51802OmCO8M">Aliexpress</a>
         </td>
     </tr>
 </table>
@@ -91,11 +91,13 @@ void matrix_scan_user(void) {
         button_press_time = 0;
     }
 }
+```
 
 My keymap is also equipped with a tapdance key that resets the keyboard on 5 taps.
 
 
-Notice also the controller configuration and formatting of pinouts in info.json: 
+Notice also the controller configuration and formatting of pinouts in info.json:
+
 ```json
     "processor": "RP2040",
     "bootloader": "rp2040",
@@ -110,7 +112,9 @@ Notice also the controller configuration and formatting of pinouts in info.json:
 ```
 
 I wired the rows top to bottom, and the columns outside->in according to juhakaup's diagram:
-<a href="https://github.com/juhakaup/keyboards/blob/main/Cygnus%20v1.0/img/4x6wiring.jpg"
+<p align="center">
+<img src="https://github.com/juhakaup/keyboards/blob/main/Cygnus%20v1.0/img/4x6wiring.jpg" alt="wiring diagram" style="width:600px;"/>
+</p>
 
 Other rp2040-zero specific qmk setup includes the following lines in rules.mk:
 
@@ -192,7 +196,6 @@ Complete list:
             T# -> tion
         </td>
         <td>
-           
         </td>
     </tr>
 </table>   
@@ -204,27 +207,126 @@ Complete list:
 Allows one key send multiple different actions depending on how may times it is tapped in quick succession.
 
 Complete list:
-          TD_ESC_LAYER_BOOT       1 tap       Escape
-                                                3 taps      Toggle QWERTY and HD layers
-                                                5 taps      Reset keyboard to Bootloader
-
-                        TD_DOT                  1 tap       Period/Space/One-Shot Shift (end of sentence)
-                                                2 taps      . (deletes space typed by first tap)
-                                                3 taps      ...
-
+<table>
+    <tr>
+        <td>      
+            TD_ESC_LAYER_BOOT
+        </td>
+        <td>
+            1 tap
+        </td>
+        <td>
+            Escape
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+            3 taps
+        </td>
+        <td>
+            Toggle QWERTY and HD layers
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+            5 taps
+        </td>
+        <td>
+            Reset keyboard to Bootloader
+        </td>
+    </tr>
+    <tr>
+        <td>      
+            TD_DOT
+        </td>
+        <td>
+            1 tap
+        </td>
+        <td>
+            Period/Space/One-Shot Shift (end of sentence)
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+            2 taps
+        </td>
+        <td>
+            . (deletes space typed by first tap)
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+            3 taps
+        </td>
+        <td>
+            ...
+        </td>
+    </tr>
+</table>
+            
+                                                
+                
 ### Custom Shift Keys
 
 Changes the default behovior of certain keys when shifted
 
-Complete list:          Shift - is +
-                        Shift , is ;
-                        Shift # is $
-                        Shift . is :
-                        Shift / is *
-                        Shift " is [
-                        Shift ' is ]
-                        Shift 7 is ( (Num layer only)
-                        Shift 9 is ) (Num layer only)
+Complete list:     
+<table>
+    <tr>  
+        <td>
+            Shift - is +
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift , is ;
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift # is $
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift . is :
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift / is *
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift " is [
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift ' is ]
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift 7 is ( (Num layer only)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Shift 9 is ) (Num layer only)
+        </td>
+    </tr>
+</table>
+
 
 ### Combos
 
