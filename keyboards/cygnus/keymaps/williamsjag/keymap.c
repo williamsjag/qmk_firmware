@@ -766,6 +766,67 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     SEND_STRING("williamsjag");
                 }
             }
+            return false;
+        case HD_EURO:
+            if (record->event.pressed) {
+                tap_code16(UNI_TOG);
+                tap_code16(UC(0x20AC));
+                tap_code16(UNI_TOG);
+            }
+            return false;
+        case HD_PND:
+            if (record->event.pressed) {
+                tap_code16(UNI_TOG);
+                tap_code16(UC(0x00A3));
+                tap_code16(UNI_TOG);
+            }
+            return false;
+        case HD_YEN:
+            if (record->event.pressed) {
+                tap_code16(UNI_TOG);
+                tap_code16(UC(0x00A5));
+                tap_code16(UNI_TOG);
+            }
+            return false;
+        case HD_NATUR:
+            if (record->event.pressed) {
+                tap_code16(UNI_TOG);
+                tap_code16(UC(0x266E));
+                tap_code16(UNI_TOG);
+            }
+            return false;
+        case HD_FLAT:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    tap_code16(UNI_TOG);
+                    tap_code16(UC(0xD834));
+                    tap_code16(UC(0xDD2B));
+                    tap_code16(UNI_TOG);
+                    register_mods(mod_state);
+                }
+                tap_code16(UNI_TOG);
+                tap_code16(UC(0x266D));
+                tap_code16(UNI_TOG);
+            }
+            return false; 
+        case HD_SHARP:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    tap_code16(UNI_TOG);
+                    tap_code16(UC(0xD834));
+                    tap_code16(UC(0xDD2A));
+                    tap_code16(UNI_TOG);
+                    register_mods(mod_state);
+                }
+                tap_code16(UNI_TOG);
+                tap_code16(UC(0x266F));
+                tap_code16(UNI_TOG);
+            }
+            return false;
 
     }  
 
@@ -885,15 +946,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_SYM] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                      KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, 
+      KC_ESC, KC_GRV,  HD_LPRN, HD_RPRN, HD_SCLN, HD_COMM,                      KC_NO,  HD_EURO,  HD_PND,  HD_YEN,  KC_NO,   KC_NO, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TRNS, HD_QUOT, HS_LABK, HS_RABK, HD_DQUO, UNAME,                        HD_QUES, UPDIR,   HD_LBRC, HD_RBRC, HD_PERC, KC_BSPC,
+      HD_EXLM, HD_LCBR, HD_LBRC, HD_RBRC, HD_RCBR, HD_QUES,                      UPDIR,   KC_BSPC, KC_TAB,  HD_AT,   KC_NO,   HD_SHARP,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_NO,   HD_EXLM, HD_MINS, HD_PLUS, HS_EQL,  HD_HASH,                      HD_PIPE, HS_COLN, HD_LPRN, HD_RPRN, HD_QUES, KC_NO,
+      HD_HASH, HD_CIRC, HN_EQL,  HD_UNDS, HD_DLR,  HD_ASTR,                      HD_COLN, KC_RSFT, UNAME,   KC_AMPR, KC_ENT,  HD_NATUR,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TRNS, HD_BSLS, HD_SLSH, HD_ASTR, HD_CIRC, KC_NO,                        HD_TILD, HD_DLR,  HD_LCBR, HD_RCBR, HD_AT,   KC_TRNS, 
+      HD_TILD, HS_LABK, HD_PIPE, HD_MINS, HS_RABK, HD_BSLS,                      HD_DOT,  KC_DEL,  HD_BTAB, HD_PERC, KC_RSFT, HD_FLAT, 
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_NO,   KC_NO,   MO(_EXT),     KC_TRNS,  KC_NO,   KC_NO
+                                          HD_SLSH, HD_SPC, MO(_EXT),     KC_TRNS,  KC_NO,   KC_NO
                                       //`--------------------------'  `--------------------------'
   ),
 

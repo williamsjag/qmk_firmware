@@ -35,8 +35,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     SELW_L,
     SELLINE,
     HN_EQL, // _NUM = for shift macro
-    HS_LABK, // _SYM { for shift macro
-    HS_RABK, // _SYM } for shift macro
+    HS_LABK, // _SYM < for shift macro
+    HS_RABK, // _SYM > for shift macro
     // _NUM for mouse buttons   
     HN_HOME, 
     HN_END,
@@ -65,6 +65,12 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HD_PSTE,
     HD_PSTM,
     UNAME,
+    HD_EURO,
+    HD_PND,
+    HD_YEN,
+    HD_SHARP,
+    HD_NATUR,
+    HD_FLAT,
 };
 
 // Hands Down alphas with hold-taps and custom codes
@@ -117,19 +123,20 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_TILD KC_TILD // ~ 
 #define HD_LCBR KC_LCBR // {
 #define HD_RCBR KC_RCBR // }
-#define HD_SLSH KC_SLSH
-#define HD_AT   KC_AT
-#define HD_EQL  KC_EQL
-#define HD_LBRC KC_LBRC
-#define HD_RBRC KC_RBRC
-#define HD_HASH KC_HASH
-#define HD_SPC  KC_SPC
-#define HD_BSPC KC_BSPC
-#define HD_ENT  KC_ENT
-#define HD_QUOT KC_QUOT
-#define HD_DQUO KC_DQUO
-#define HD_ASTR KC_ASTR
-#define HD_COMM KC_COMM
+#define HD_SLSH KC_SLSH // /
+#define HD_AT   KC_AT   // @
+#define HD_EQL  KC_EQL  // =
+#define HD_LBRC KC_LBRC // [
+#define HD_RBRC KC_RBRC // ]
+#define HD_HASH KC_HASH // #
+#define HD_SPC  KC_SPC  // ␣
+#define HD_BSPC KC_BSPC // ⌫
+#define HD_ENT  KC_ENT  // ↵
+#define HD_QUOT KC_QUOT // '
+#define HD_DQUO KC_DQUO // "
+#define HD_ASTR KC_ASTR // *    
+#define HD_COMM KC_COMM // ,
+#define HD_UNDS KC_UNDS // _
 
 // Layer special keys
 #define HN_4 RSFT_T(KC_4)
@@ -138,10 +145,10 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HN_PLUS RCTL_T(KC_PLUS)
 #define HN_7 KC_7 
 #define HN_9 KC_9
-#define HS_EQL RSFT_T(HN_EQL)
-#define HS_COLN LSFT_T(HD_COLN)
 #define HD_SCAP LGUI(LSFT(4))
 #define HD_FSCAP LGUI(LSFT(3))
+#define HD_BTAB LSFT(KC_TAB)
+#define UNI_TOG LCTL(LALT(KC_SPC))
 
 // Tap Dance keys
 // Tap Dance definitions

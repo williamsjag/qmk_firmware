@@ -10,18 +10,20 @@ AUDIO_ENABLE = no
 MUSIC_ENABLE = no
 RGBLIGHT_ENABLE = no
 LEADER_ENABLE = no
-UNICODE_ENABLE = no
 NKRO_ENABLE = no 
 CONSOLE_ENABLE = no
 SPACE_CADET_ENABLE = no
 GRAVE_ESC_ENABLE = no
 AUTO_SHIFT_ENABLE = no
 
+# enabled features
 MOUSEKEY_ENABLE = yes
 TAP_DANCE_ENABLE = yes
 EXTRAKEY_ENABLE = yes
 COMBO_ENABLE = yes
 CAPS_WORD_ENABLE = yes
+UNICODE_ENABLE = yes
+UNICODE_COMMON = yes
 
 LTO_ENABLE = no # change if not enough space on board - incompatible with macro and function
 

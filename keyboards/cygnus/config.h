@@ -37,6 +37,11 @@ see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 #define CAPS_WORD_INVERT_ON_SHIFT
 
+// Unicode settings
+#define UNICODE_KEY_MAC KC_LEFT_ALT
+#define UNICODE_TYPE_DELAY 0
+#define UNICODE_SELECTED_MODES UNICODE_MODE_MACOS
+
 /* Don't apply custom shift keys on layer 0 (QWERTY) */
 #define CUSTOM_SHIFT_KEYS_LAYER_MASK ~(1 << 0)
 

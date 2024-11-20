@@ -6,7 +6,7 @@
     "processor": "RP2040",
     "bootloader": "rp2040",
     "split": {
-        "soft_serial_pin": "GP1"
+        "soft_serial_pin": "GP1" 
     },
     "diode_direction": "COL2ROW",
     "matrix_pins": {
