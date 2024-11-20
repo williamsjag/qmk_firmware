@@ -176,6 +176,25 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_PSTM   LSFT(LALT(LGUI(KC_V)))
 #define SELW_L    LALT(LSFT(KC_LEFT))
 #define SELW_R    LALT(LSFT(KC_RGHT))
+#define SEL_A     LGUI(KC_A)
+#define CAP_PG    LSFT(LGUI(KC_2))
+#define WIN_L3    LCTL(LALT(KC_D))
+#define WIN_R3    LCTL(LALT(KC_G))
+#define WIN_L23   LCTL(LALT(KC_E))
+#define WIN_R23   LCTL(LALT(KC_T))
+#define WIN_L2    LCTL(LALT(KC_LEFT))
+#define WIN_R2    LCTL(LALT(KC_RGHT))
+#define MUTE      KC_F10
+#define MUS_PRE   KC_F7
+#define MUS_NEX   KC_F9
+#define PLAY      KC_F8
+#define V_DOWN    KC_F11
+#define V_UP      KC_F12
+#define TSLATE    LGUI(KC_1)
+#define PWORD     LSFT(LGUI(KC_SPC))
+#define GPT       LCTL(LALT(LGUI(KC_SPC)))
+#define B_TAB_P   LGUI(LALT(KC_UP))
+#define B_TAB_N   LGUI(LALT(KC_DOWN))
 
 // Tap Dance keys
 // Tap Dance definitions

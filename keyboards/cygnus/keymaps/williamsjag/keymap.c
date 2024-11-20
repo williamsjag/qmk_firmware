@@ -834,7 +834,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(UNI_TOG);
             }
             return false;
-
+        case WIN_L3:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    tap_code16(WIN_L23);
+                    register_mods(mod_state);
+                }
+                else {
+                    tap_code16(WIN_L3);
+                }
+            }
+            return false;
+        case WIN_R3:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    tap_code16(WIN_R23);
+                    register_mods(mod_state);
+                }
+                else {
+                    tap_code16(WIN_R3);
+                }
+            }
+            return false;
     }  
 
     // process adaptive keys - move earlier ??
@@ -939,13 +964,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NUM] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_F6,                        KC_F7,   KC_F8,   KC_F9,   KC_F10, KC_F11,  KC_F12, 
+      KC_NO,   KC_NO,   SELLINE, SELW_L,  SELW_R,  SEL_A,                        HD_CIRC,  HD_HASH, HD_PERC, HD_DLR, HD_COLN, HD_EXLM, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TRNS, KC_PGUP, HN_HOME, HN_UP,   HN_END,  SELW_L,                       KC_SLSH,  HN_7,    KC_8,    HN_9,  KC_MINS,  KC_BSPC,
+      KC_TAB,  KC_PGUP, HN_HOME, HN_UP,   HN_END,  U_SCRL,                       HD_SLSH,  HN_7,   KC_8,    HN_9,   KC_MINS,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      SELLINE, KC_PGDN, HN_LEFT, HN_DOWN, HN_RGHT, SELW_R,                       KC_ASTR,  HN_4,    HN_5,    HN_6,  HN_PLUS,  KC_NO,
+      KC_NO,   KC_PGDN, HN_LEFT, HN_DOWN, HN_RGHT, D_SCRL,                       HD_ASTR,  HN_4,   HN_5,    HN_6,   HN_PLUS,  KC_DEL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_LSFT, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_REDO,                      KC_COMM,  KC_1,    KC_2,    KC_3,  HN_EQL,   HD_RSFT, 
+      HD_LSFT, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                      HD_COMM,  KC_1,   KC_2,    KC_3,   HN_EQL,   HD_RSFT, 
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_NO,   KC_NO,   KC_TRNS,   MO(_EXT),  KC_0,   HD_DOT
                                       //`--------------------------'  `--------------------------'
@@ -967,15 +992,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_EXT] = LAYOUT(
  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                      KC_TRNS, ZM_IN,   ZM_RST,  ZM_OUT, KC_TRNS, KC_TRNS,
+      KC_ESC,  CAP_PG,  WIN_L3,  WIN_L2,  WIN_R2,  WIN_R3,                       MUTE,   MUS_PRE,  PLAY,    MUS_NEX, V_DOWN,  V_UP,
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_NO,   KC_NO,   KC_NO,   B_BRWS,  F_BRWS,  U_SCRL,                       DOCST,  HN_HOME,  HN_UP,   HN_END,  DEFINE,  KC_BSPC,
+      KC_TAB, B_TAB_P, B_TAB_N, B_BRWS,  F_BRWS,  KC_PGUP,                       DOCST,   HN_HOME, HN_UP,   HN_END,  DEFINE,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_NO,   KC_LCMD, KC_LALT, KC_LGUI, KC_LSFT, D_SCRL,                        WIN_L,  HN_LEFT, HN_DOWN, HN_RGHT, WIN_R,   KC_DEL, 
+      GPT,    KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, KC_PGDN,                       DOCEND,  HN_LEFT, HN_DOWN, HN_RGHT, TSLATE,  KC_DEL, 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     HD_LSFT, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                       DOCEND,   KC_NO,  KC_NO,   KC_PGDN, HELP,    HD_RSFT,
+     HD_REDO, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                       PWORD,   ZM_IN,   ZM_RST,  ZM_OUT,  HELP,    HD_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                           KC_NO,   KC_NO,   KC_NO,     KC_TRNS, KC_NO,   KC_NO
+                                           KC_NO,   KC_NO,  KC_TRNS,    KC_TRNS, KC_NO,   KC_NO
                                       //`--------------------------'  `--------------------------' 
     )
 };
