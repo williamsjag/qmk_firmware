@@ -31,14 +31,14 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HC_SH,
     HC_WH,
     UPDIR,
-    SELW_R,
-    SELW_L,
-    SELLINE,
+    /* SELW_R,
+    SELW_L, */
+    SELLINE, 
     HN_EQL, // _NUM = for shift macro
     HS_LABK, // _SYM < for shift macro
     HS_RABK, // _SYM > for shift macro
     // _NUM for mouse buttons   
-    HN_HOME, 
+    /* HN_HOME, 
     HN_END,
     HN_UP,
     HN_LEFT,
@@ -63,7 +63,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HD_CUT,
     HD_COPY,
     HD_PSTE,
-    HD_PSTM,
+    HD_PSTM, */
     UNAME,
     HD_EURO,
     HD_PND,
@@ -139,16 +139,43 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_UNDS KC_UNDS // _
 
 // Layer special keys
-#define HN_4 RSFT_T(KC_4)
-#define HN_5 RGUI_T(KC_5)
-#define HN_6 RALT_T(KC_6)
-#define HN_PLUS RCTL_T(KC_PLUS)
-#define HN_7 KC_7 
-#define HN_9 KC_9
-#define HD_SCAP LGUI(LSFT(4))
-#define HD_FSCAP LGUI(LSFT(3))
-#define HD_BTAB LSFT(KC_TAB)
-#define UNI_TOG LCTL(LALT(KC_SPC))
+#define HN_4      RSFT_T(KC_4)
+#define HN_5      RGUI_T(KC_5)
+#define HN_6      RALT_T(KC_6)
+#define HN_PLUS   RCTL_T(KC_PLUS)
+#define HN_7      KC_7 
+#define HN_9      KC_9
+#define HD_SCAP   LGUI(LSFT(4))
+#define HD_FSCAP  LGUI(LSFT(3))
+#define HD_BTAB   LSFT(KC_TAB)
+#define UNI_TOG   LCTL(LALT(KC_SPC))
+#define HELP      LGUI(LSFT(KC_QUES))
+#define DEFINE    LGUI(LALT(KC_D))
+#define WIN_R     LALT(LCTL(KC_RIGHT))
+#define WIN_L     LALT(LCTL(KC_LEFT))
+#define ZM_RST    LGUI(KC_0)
+#define ZM_OUT    LGUI(KC_MINS)
+#define ZM_IN     LGUI(KC_PLUS)
+#define DOCEND    LGUI(KC_DOWN)
+#define DOCST     LGUI(KC_UP)
+#define U_SCRL    MS_WHLU
+#define D_SCRL    MS_WHLD
+#define F_BRWS    LGUI(KC_RBRC)
+#define B_BRWS    LGUI(KC_LBRC)
+#define HN_HOME   KC_HOME
+#define HN_END    KC_END
+#define HN_RGHT   KC_RGHT
+#define HN_LEFT   KC_LEFT
+#define HN_UP     KC_UP
+#define HN_DOWN   KC_DOWN
+#define HD_UNDO   LGUI(KC_Z)
+#define HD_REDO   LGUI(LSFT(KC_Z))
+#define HD_CUT    LGUI(KC_X)
+#define HD_COPY   LGUI(KC_C)
+#define HD_PSTE   LGUI(KC_V)
+#define HD_PSTM   LSFT(LALT(LGUI(KC_V)))
+#define SELW_L    LALT(LSFT(KC_LEFT))
+#define SELW_R    LALT(LSFT(KC_RGHT))
 
 // Tap Dance keys
 // Tap Dance definitions

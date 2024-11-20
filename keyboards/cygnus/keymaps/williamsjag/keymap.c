@@ -216,6 +216,13 @@ const custom_shift_key_t custom_shift_keys[] = {
     {HD_QUOT, HD_RBRC}, // Shift ' is ]
     {HN_7, HD_LPRN}, // Shift 7 on _NUM is (
     {HN_9, HD_RPRN}, // Shift 9 on _NUM is )
+    {HN_HOME, MS_BTN1}, // Shift Home on _NUM is L click
+    {HN_END, MS_BTN2}, // Shift End on _NUM is R click
+    {HN_RGHT, MS_RGHT}, // Shift arrown os _NUM is mouse movement
+    {HN_LEFT, MS_LEFT},
+    {HN_UP, MS_UP},
+    {HN_DOWN, MS_DOWN},
+    
 };
 
 uint8_t NUM_CUSTOM_SHIFT_KEYS =
@@ -502,7 +509,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("../");
             }
             return false;
-        case SELW_R:  // Selects the word to the right of the cursor.
+        /* case SELW_R:  // Selects the word to the right of the cursor.
             if (record->event.pressed) {
                 register_mods(MOD_BIT(KC_LALT));
                 register_mods(MOD_BIT(KC_LSFT));
@@ -519,7 +526,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_mods(MOD_BIT(KC_LALT));
                 unregister_mods(MOD_BIT(KC_LSFT));
             }
-            return false;
+            return false; */
         case SELLINE:  // Selects the current line.
             if (record->event.pressed) {
                 SEND_STRING(SS_LCTL("a" SS_LSFT("e")));
@@ -551,7 +558,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-        case HD_UNDO:
+        /* case HD_UNDO:
             if (record->event.pressed) {
                 SEND_STRING(SS_LGUI("z"));
             }
@@ -693,7 +700,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case DOCEND:
             if (record->event.pressed) {
                 register_mods(MOD_BIT(KC_LGUI));
-                tap_code16(KC_UP);
+                tap_code16(KC_DOWN);
                 unregister_mods(MOD_BIT(KC_LGUI));
             }
             return false;
@@ -753,7 +760,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_mods(MOD_BIT(KC_LGUI));
                 unregister_mods(MOD_BIT(KC_LSFT));
             }
-            return false;
+            return false; */
         case UNAME:
             if (record->event.pressed) {
                 if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
