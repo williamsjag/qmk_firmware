@@ -1,23 +1,17 @@
 {
-    "manufacturer": "Jackson Williams",
+    "manufacturer": "williamsjag",
     "keyboard": "Cygnus",
     "keyboard_name": "Cygnus 4x6",
     "maintainer": "williamsjag",
     "processor": "RP2040",
     "bootloader": "rp2040",
-    "split": {
-        "soft_serial_pin": "GP1" 
-    },
+
     "diode_direction": "COL2ROW",
     "matrix_pins": {
         "cols": ["GP3", "GP4", "GP5", "GP6", "GP7", "GP8"],
         "rows": ["GP28", "GP27", "GP26", "GP15", "GP14"]
     },
-    "features": {
-        "bootmagic": false,
-        "command": false
-    },
-    "url": "",
+    "url": "https://github.com/williamsjag/dactyl_cygnus_4x6",
     "usb": {
         "device_version": "1.0.0",
         "pid": "0xBEEF",

@@ -8,14 +8,13 @@ This is my build of juhakaup's excellent [Cygnus](https://github.com/juhakaup/ke
 * Hardware Supported: rp2040, individual PCBs
 * Hardware Availability: *Links to where you can find this hardware*
 
-Compile example for this keyboard (after setting up your build environment and moving cygnus folder into qmk_firmware/keyboards):
+Place the cygnus folder from this repository in the keyboards folder of your qmk installation.
+Then use this command in QMK CLI to create the firmware:
 
     qmk compile -kb cygnus -km default
 
 
 Flashing this keyboard: drag uf2 file to usb storage of controller in boot mode
-
-
 
 See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
 

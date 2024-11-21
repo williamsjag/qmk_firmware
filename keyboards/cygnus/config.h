@@ -26,6 +26,12 @@ see <http://www.gnu.org/licenses/>.
 // #define MATRIX_COL_PINS { GP3, GP4, GP5, GP6, GP7, GP8 }
 // #define SERIAL_USART_TX_PIN GP1
 
+//Serial settings
+#define USE_SERIAL
+#define SOFT_SERIAL_PIN GP1
+#define SERIAL_USE_MULTI_TRANSACTION
+#define SERIAL_PIO_USE_PIO1
+
 #define TAPPING_TOGGLE 2
 #define TAPPING_TERM 170
 // https://github.com/moutis/HandsDown/blob/main/moutis.h

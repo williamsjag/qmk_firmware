@@ -1,8 +1,12 @@
 SPLIT_KEYBOARD = yes
 # FIRMWARE_FORMAT = uf2
+MCU = RP2040
 BOOTLOADER = rp2040
-BOARD = GENERIC_RP_RP2040
+SPLIT_KEYBOARD = yes
+# BOARD = GENERIC_RP_RP2040
+
 SERIAL_DRIVER = vendor # needed for half-duplex with TRRS+rp2040
+WS2812_DRIVER = vendor
 
 
 # Space savings
@@ -25,7 +29,7 @@ CAPS_WORD_ENABLE = yes
 UNICODE_ENABLE = yes
 UNICODE_COMMON = yes
 
-LTO_ENABLE = no # change if not enough space on board - incompatible with macro and function
+LTO_ENABLE = no # must be disabled for rp2040 builds
 
 SRC += features/custom_shift_keys.c
 SRC += features/achordion.c
