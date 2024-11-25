@@ -17,12 +17,40 @@ uint16_t last_keycode;
 // Tap Dance (https://docs.qmk.fm/features/tap_dance)
 ///////////////////////////////////////////////////////////////////////////////
 
+// Helper function for keycode conversion
+uint16_t ascii_to_keycode(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        return (c - 'A') + KC_A;  // Convert uppercase letters
+    } else if (c >= 'a' && c <= 'z') {
+        return (c - 'a') + KC_A;  // Convert lowercase letters (QMK assumes shift is applied)
+    } else if (c >= '0' && c <= '9') {
+        return (c - '0') + KC_0;  // Convert numbers
+    } else {
+        // Add additional mappings here for other characters as needed
+        switch (c) {
+            case ' ':
+                return KC_SPC;  // Space
+            case '-':
+                return KC_MINS; // Dash
+            case '_':
+                return S(KC_MINS); // Underscore
+            // Add more symbols as necessary
+            default:
+                return KC_NO;  // Unsupported character
+        }
+    }
+}
+
 // Custom function to announce layer on change
 void type_and_delete_text(const char* text) {
     // Type out the text
     for (const char* p = text; *p; p++) {
-        tap_code16(*p);
-        wait_ms(15);
+        // convert char to keycode
+        uint16_t keycode = ascii_to_keycode(*p);
+        if (keycode != KC_NO) {
+            tap_code16(*p);
+            wait_ms(15);
+        }
     }
     // Wait 500 ms
     wait_ms(500);
