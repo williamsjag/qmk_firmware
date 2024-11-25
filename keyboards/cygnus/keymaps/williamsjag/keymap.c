@@ -874,32 +874,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #include "gpio.h" // Include GPIO functions
 
-#define RESET_BUTTON_PIN GP29 
-#define RESET_HOLD_TIME 2000 // Time in milliseconds
-
-void keyboard_pre_init_user(void) {
-    setPinInputHigh(RESET_BUTTON_PIN); // Configure the pin as input with pull-up
-}
-
 void matrix_scan_user(void) {
     achordion_task();
-    // reset button logic
-    static bool button_pressed = false;
-    static uint32_t button_press_time = 0;
-
-    // Check if the button is pressed
-    if (!readPin(RESET_BUTTON_PIN)) { // Active low
-        if (!button_pressed) {
-            button_pressed = true;
-            button_press_time = timer_read(); // Record the current time
-        } else if (timer_elapsed(button_press_time) >= RESET_HOLD_TIME) {
-            reset_keyboard(); // Trigger the reset after 2 seconds
-        }
-    } else {
-        // Reset state if the button is released
-        button_pressed = false;
-        button_press_time = 0;
-    }
 }
 
 /* #define LAYOUT( \
