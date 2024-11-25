@@ -970,9 +970,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_NO,   KC_NO,   SELLINE, SELW_L,  SELW_R,  SEL_A,                        HD_CIRC,  HD_HASH, HD_PERC, HD_DLR, HD_COLN, HD_EXLM, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB,  KC_PGUP, HN_HOME, HN_UP,   HN_END,  U_SCRL,                       HD_SLSH,  HN_7,   KC_8,    HN_9,   KC_MINS,  KC_BSPC,
+      KC_TAB,  KC_PGUP, HN_HOME, HN_UP,   HN_END,  D_SCRL,                       HD_SLSH,  HN_7,   KC_8,    HN_9,   KC_MINS,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_NO,   KC_PGDN, HN_LEFT, HN_DOWN, HN_RGHT, D_SCRL,                       HD_ASTR,  HN_4,   HN_5,    HN_6,   HN_PLUS,  KC_DEL,
+      KC_NO,   KC_PGDN, HN_LEFT, HN_DOWN, HN_RGHT, U_SCRL,                       HD_ASTR,  HN_4,   HN_5,    HN_6,   HN_PLUS,  KC_DEL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       HD_LSFT, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                      HD_COMM,  KC_1,   KC_2,    KC_3,   HN_EQL,   HD_RSFT, 
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
