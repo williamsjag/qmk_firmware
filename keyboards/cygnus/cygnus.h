@@ -10,14 +10,14 @@ enum layers {
 };
 
 enum custom_keycodes { // Define custom keycodes for use in combos/macros
-    HD_QU = SAFE_RANGE,  // Ensure it’s a unique keycode.
+    HC_SCAP = SAFE_RANGE,  // Ensure it’s a unique keycode.
     // Combo Definitions
-    HC_SCAP,
     HC_CW_TOGG,
     HC_GLMETS,
     HC_EXLM,
     HC_QUES,
     HC_PIPE,
+    HD_QU,
     BSPCEV_EVERY,
     BSPCH_HERE,
     BSPCIT_IN_THE,
@@ -90,7 +90,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_N LGUI_T(KC_N)
 #define HD_O KC_O
 #define HD_P KC_P
-#define HD_Q KC_Q
+#define HD_Q LT(0, HD_QU) // long press key for Q/Qu
 #define HD_R KC_R
 #define HD_S LALT_T(KC_S)
 #define HD_T LSFT_T(KC_T)

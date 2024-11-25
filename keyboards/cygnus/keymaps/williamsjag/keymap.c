@@ -133,6 +133,20 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_DOT] = ACTION_TAP_DANCE_FN_ADVANCED(sentence_end, sentence_end_finished, NULL),
 };
 
+// Not exactly a Tap Dance, but related
+// Helper for implementing tap vs. long-press keys. Given a tap-hold
+// key event, replaces the hold function with `long_press_keycode`.
+static bool process_tap_or_long_press_key(
+    keyrecord_t* record, uint16_t long_press_keycode) {
+  if (record->tap.count == 0) {  // Key is being held.
+    if (record->event.pressed) {
+      tap_code16(long_press_keycode);
+    }
+    return false;  // Skip default handling.
+  }
+  return true;  // Continue default handling.
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Hands Down Adaptive Keys (https://sites.google.com/alanreiser.com/handsdown/home/hands-down-neu)
 ///////////////////////////////////////////////////////////////////////////////
@@ -502,22 +516,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Handle QU tap-hold
     switch (keycode) {
         case HD_QU:
-            if (record->tap.count > 0) {
-                if (record->event.pressed) {
-                    // On tap, send "qu"
-                    SEND_STRING("qu");
-                }
-                return false;  // Skip further processing of this key
-            } else {
-                if (record->event.pressed) {
-                    // On hold, send "q"
-                    register_code(KC_Q);
-                } else {
-                    unregister_code(KC_Q);
-                }
-                return false;
+            if (record->event.pressed) {
+                SEND_STRING("qu");
             }
-            break;
+            return false;
+        case HD_Q: // Qu on tap, Q on long press
+            return process_tap_or_long_press_key(record, KC_Q);
         // shift = to != in _NUM
         case HN_EQL:
             if (record->event.pressed) {
