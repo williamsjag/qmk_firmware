@@ -8,8 +8,14 @@
 
     "diode_direction": "COL2ROW",
     "matrix_pins": {
-        "cols": ["GP3", "GP4", "GP5", "GP6", "GP2", "GP8"],
-        "rows": ["GP28", "GP27", "GP26", "GP15", "GP14"]
+        "left": {
+            "cols": ["GP3", "GP4", "GP5", "GP6", "GP7", "GP8"],
+            "rows": ["GP28", "GP27", "GP26", "GP15", "GP14"]
+        },
+        "right": {
+            "cols": ["GP3", "GP4", "GP5", "GP6", "GP2", "GP8"],
+            "rows": ["GP28", "GP27", "GP26", "GP15", "GP14"]
+        }
     },
     "url": "https://github.com/williamsjag/dactyl_cygnus_4x6",
     "usb": {
