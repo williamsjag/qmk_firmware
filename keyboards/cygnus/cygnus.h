@@ -17,7 +17,10 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HC_EXLM,
     HC_QUES,
     HC_PIPE,
-    HD_QU,
+    HC_AU,
+    HC_UA,
+    HC_EO,
+    HC_OE,
     BSPCEV_EVERY,
     BSPCH_HERE,
     BSPCIT_IN_THE,
@@ -29,11 +32,13 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HC_PH,
     HC_TH,
     HC_SH,
-    HC_WH,
+    HC_WH, 
+    SK_QU,
     UPDIR,
     /* SELW_R,
     SELW_L, */
-    SELLINE, 
+    SELLINE,
+    SELWD, 
     HN_EQL, // _NUM = for shift macro
     HS_LABK, // _SYM < for shift macro
     HS_RABK, // _SYM > for shift macro
@@ -90,7 +95,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_N LGUI_T(KC_N)
 #define HD_O KC_O
 #define HD_P KC_P
-#define HD_Q LT(0, HD_QU) // long press key for Q/Qu
+#define HD_Q KC_Q
+#define Q_QU LT(0, SK_QU)
 #define HD_R KC_R
 #define HD_S LALT_T(KC_S)
 #define HD_T LSFT_T(KC_T)
@@ -137,6 +143,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_ASTR KC_ASTR // *    
 #define HD_COMM KC_COMM // ,
 #define HD_UNDS KC_UNDS // _
+#define HD_LGMT LALT(KC_BSLS)
+#define HD_RGMT LALT(LSFT(KC_BSLS))
 
 // Layer special keys
 #define HN_4      RSFT_T(KC_4)
@@ -145,8 +153,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HN_PLUS   RCTL_T(KC_PLUS)
 #define HN_7      KC_7 
 #define HN_9      KC_9
-#define HD_SCAP   LGUI(LSFT(4))
-#define HD_FSCAP  LGUI(LSFT(3))
+#define HD_SCAP   LGUI(LSFT(KC_4))
+#define HD_FSCAP  LGUI(LSFT(KC_3))
 #define HD_BTAB   LSFT(KC_TAB)
 #define UNI_TOG   LCTL(LALT(KC_SPC))
 #define HELP      LGUI(LSFT(KC_QUES))

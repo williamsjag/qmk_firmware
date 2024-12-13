@@ -9,7 +9,6 @@
 
 #define ____ KC_TRNS
 
-uint16_t last_keycode;
 
 // Custom keycode definitions found in cygnus.h
 
@@ -17,48 +16,6 @@ uint16_t last_keycode;
 // Tap Dance (https://docs.qmk.fm/features/tap_dance)
 ///////////////////////////////////////////////////////////////////////////////
 
-// Helper function for keycode conversion
-uint16_t ascii_to_keycode(char c) {
-    if (c >= 'A' && c <= 'Z') {
-        return (c - 'A') + KC_A;  // Convert uppercase letters
-    } else if (c >= 'a' && c <= 'z') {
-        return (c - 'a') + KC_A;  // Convert lowercase letters (QMK assumes shift is applied)
-    } else if (c >= '0' && c <= '9') {
-        return (c - '0') + KC_0;  // Convert numbers
-    } else {
-        // Add additional mappings here for other characters as needed
-        switch (c) {
-            case ' ':
-                return KC_SPC;  // Space
-            case '-':
-                return KC_MINS; // Dash
-            case '_':
-                return S(KC_MINS); // Underscore
-            // Add more symbols as necessary
-            default:
-                return KC_NO;  // Unsupported character
-        }
-    }
-}
-
-// Custom function to announce layer on change
-void type_and_delete_text(const char* text) {
-    // Type out the text
-    for (const char* p = text; *p; p++) {
-        // convert char to keycode
-        uint16_t keycode = ascii_to_keycode(*p);
-        if (keycode != KC_NO) {
-            tap_code16(*p);
-            wait_ms(15);
-        }
-    }
-    // Wait 500 ms
-    wait_ms(500);
-    // Delete the text
-    for (const char* p = text; *p; p++) {
-        tap_code(KC_BSPC);
-    }
-}
 
 // Define esc_layer_boot
 void dance_esc_layer_boot(tap_dance_state_t *state, void *user_data) {
@@ -70,11 +27,19 @@ void dance_esc_layer_boot(tap_dance_state_t *state, void *user_data) {
         if (layer_state_is(1)) {
             // If Layer 1 is already active, switch to Layer 0
             layer_invert(1);
-            type_and_delete_text("QWERTY");
+            SEND_STRING("QWERTY");
+            wait_ms(500);
+            for (int i = 0; i < 6; i++) {
+                tap_code(KC_BSPC);
+            }
         } else {
             // If Layer 1 is inactive, switch to Layer 1
             layer_invert(1);
-            type_and_delete_text("HD Vibranium");
+            SEND_STRING("HD Vibranium");
+            wait_ms(500);
+            for (int i = 0; i < 12; i++) {
+                tap_code(KC_BSPC);
+            }
         }
     } else if (state->count == 5) {
         // Five taps: Send QK_BOOT (reboot to bootloader)
@@ -103,145 +68,120 @@ static void sentence_end(tap_dance_state_t *state, void *user_data) {
             }
             break;
         case 2:
-            // Delete extra space on double tap
-            tap_code(KC_BSPC);
+            // Type a single dot
+            tap_code(KC_DOT);
             break;
-
         // Three dots ellipsis.
         case 3:
+            // type a dot
+            tap_code(KC_DOT);
             // add a second dot
             tap_code(KC_DOT);
             // tap the third dot
             tap_code(KC_DOT);
             break;
-
-        /* Old code before adding case 1
-        send KC_DOT on every normal tap of TD_DOT
-        default:
-            tap_code(KC_DOT);
-        */
     }
 };
 
 void sentence_end_finished (tap_dance_state_t *state, void *user_data) {
 }
 
-
 // Define Tap Dance Actions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_ESC_LAYER_BOOT] = ACTION_TAP_DANCE_FN(dance_esc_layer_boot),
-    [TD_DOT] = ACTION_TAP_DANCE_FN_ADVANCED(sentence_end, sentence_end_finished, NULL),
+    [TD_DOT] = ACTION_TAP_DANCE_FN(sentence_end),
 };
 
-// Not exactly a Tap Dance, but related
-// Helper for implementing tap vs. long-press keys. Given a tap-hold
+// Not strictly a tap dance, but related
+// Helper for implementing tap vs. long-press keys if I ever implement any. Given a tap-hold
 // key event, replaces the hold function with `long_press_keycode`.
-static bool process_tap_or_long_press_key(
-    keyrecord_t* record, uint16_t long_press_keycode) {
-  if (record->tap.count == 0) {  // Key is being held.
-    if (record->event.pressed) {
-      tap_code16(long_press_keycode);
-    }
-    return false;  // Skip default handling.
+// static bool process_tap_or_long_press_key(
+//     keyrecord_t* record, uint16_t long_press_keycode) {
+//   if (record->tap.count == 0) {  // Key is being held.
+//     if (record->event.pressed) {
+//       tap_code16(long_press_keycode);
+//     }
+//     return false;  // Skip default handling.
+//   }
+//   return true;  // Continue default handling.
+//}
+
+///////////////////////////////////////////////////////////////////////////////
+// Caps Word (https://docs.qmk.fm/features/caps_word)
+///////////////////////////////////////////////////////////////////////////////
+
+bool caps_word_press_user(uint16_t keycode) {
+  switch (keycode) {
+    // Keycodes that continue Caps Word, with shift applied.
+    case KC_A ... KC_Z:
+    case KC_MINS:
+    case Q_QU:
+    case HC_AU:
+      add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to the next key.
+      return true;
+
+    // Keycodes that continue Caps Word, without shifting.
+    case KC_1 ... KC_0:
+    case KC_BSPC:
+    case KC_DEL:
+    case KC_UNDS:
+      return true;
+
+    default:
+      return false;  // Deactivate Caps Word.
   }
-  return true;  // Continue default handling.
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Hands Down Adaptive Keys (https://sites.google.com/alanreiser.com/handsdown/home/hands-down-neu)
 ///////////////////////////////////////////////////////////////////////////////
 
-// define variables used
-uint16_t preprior_keycode = KC_NO;
-uint16_t prior_keycode = KC_NO;
-uint16_t prior_keydown = 0; // timer of keydown for adaptive threshhold.
-uint8_t  saved_mods;
+// Adaptive graveyard
+// MAGIC HASH
 
-// https://github.com/moutis/HandsDown/blob/main/handsdown/vx-adaptive.c
-// https://github.com/moutis/HandsDown/blob/main/handsdown/adapt_h.c
+//         case HD_HASH: // Magic HD_HASH
+//             switch (prior_keycode) {
+//                 case HD_D: // "does"
+//                     SEND_STRING("oes");
+//                     return_state = false;
+//                     break;
+//                 case HD_F: // "for"
+//                     SEND_STRING("or");
+//                     return_state = false;
+//                     break;
+//                 case HD_H: // "have"
+//                     SEND_STRING("ave");
+//                     return_state = false;
+//                     break;
+//                 case HD_J: // "just"
+//                     SEND_STRING("ust");
+//                     return_state = false;
+//                     break;
+//                 case HD_K: // "know"
+//                     SEND_STRING("now");
+//                     return_state = false;
+//                     break;
+//                 case HD_M: // "ment"
+//                     SEND_STRING("ent");
+//                     return_state = false;
+//                     break;
+//                 case HD_S: // "sion"
+//                     SEND_STRING("ion");
+//                     return_state = false;
+//                     break;
+//                 case HD_T: // "tion"
+//                     SEND_STRING("ion");
+//                     return_state = false;
+//                     break;
+//                 case HD_W: // "williams"
+//                     SEND_STRING("illiams");
+//                     return_state = false;
+//                     break;
+//                 case HD_SPC: // "and"
+//                     SEND_STRING("and");
+//                     return_state = false;
+//                     break;
 
-bool process_adaptive_key(uint16_t keycode, const keyrecord_t *record) {
-    bool return_state = true; // assume we don't do anything.
-    
-    // Check for adaptive context
-    if (timer_elapsed(prior_keydown) > ADAPTIVE_TERM) { // outside adaptive threshhold
-        prior_keycode = preprior_keycode = prior_keydown = 0; // turn off Adaptives.
-        return true; // no adaptive conditions, so return.
-    }
-
-    // K, this could be adaptive, so process.
-    saved_mods = get_mods();
-
-    switch (keycode) { // process ignoring multi-function keys & shift state?
-        case HD_H: // H precedes a vowel much more often than it follows (thanks, Ancient Greek!) so adaptive H is a sort of Magic Key
-            switch (prior_keycode) {
-                case HD_A:
-                    tap_code(KC_U); // "AH" yields "AU" (7x more common)
-                    return_state = false; // done.
-                    break;
-                case HD_U: //
-                    tap_code(KC_A); // "UH" yields "UA" (126x more common)
-                    return_state = false; // done.
-                    break;
-                case HD_E: // these EO/OE adaptives are of questionable value
-                    tap_code(KC_O); // "EH" yields "EO" (1.75:1)
-                    return_state = false; // done.
-                    break;
-                case HD_O:
-                    tap_code(KC_E); // "OH" yields "OE" (almost 1:1, but eliminates an SFB?)
-                    return_state = false; // done.
-                    break;
-            }
-        case HD_HASH: // Magic HD_HASH
-            switch (prior_keycode) {
-                case HD_D: // "does"
-                    SEND_STRING("oes");
-                    return_state = false;
-                    break;
-                case HD_F: // "for"
-                    SEND_STRING("or");
-                    return_state = false;
-                    break;
-                case HD_H: // "have"
-                    SEND_STRING("ave");
-                    return_state = false;
-                    break;
-                case HD_J: // "just"
-                    SEND_STRING("ust");
-                    return_state = false;
-                    break;
-                case HD_K: // "know"
-                    SEND_STRING("now");
-                    return_state = false;
-                    break;
-                case HD_M: // "ment"
-                    SEND_STRING("ent");
-                    return_state = false;
-                    break;
-                case HD_S: // "sion"
-                    SEND_STRING("ion");
-                    return_state = false;
-                    break;
-                case HD_T: // "tion"
-                    SEND_STRING("ion");
-                    return_state = false;
-                    break;
-                case HD_W: // "williams"
-                    SEND_STRING("illiams");
-                    return_state = false;
-                    break;
-                case HD_SPC: // "and"
-                    SEND_STRING("and");
-                    return_state = false;
-                    break;
-            }
-    }
-    if (return_state) { // no adaptive processed, cancel state and pass it on.
-        set_mods(saved_mods);
-        prior_keycode = preprior_keycode = keycode = 0;
-    }
-    return return_state;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Custom shift keys (https://getreuer.info/posts/keyboards/custom-shift-keys)
@@ -252,19 +192,16 @@ const custom_shift_key_t custom_shift_keys[] = {
     {HD_MINS, HD_PLUS}, // Shift - is +
     {HD_COMM, HD_SCLN}, // Shift , is ;
     {HD_HASH, HD_DLR}, // Shift # is $
-    {HD_DOT, HD_COLN}, // Shift . is :
+    {TD(TD_DOT), HD_COLN}, // Shift . is :
     {HD_SLSH, HD_ASTR}, // Shift / is *
     {HD_DQUO, HD_LBRC}, // Shift " is [
     {HD_QUOT, HD_RBRC}, // Shift ' is ]
-    {HN_7, HD_LPRN}, // Shift 7 on _NUM is (
-    {HN_9, HD_RPRN}, // Shift 9 on _NUM is )
     {HN_HOME, MS_BTN1}, // Shift Home on _NUM is L click
     {HN_END, MS_BTN2}, // Shift End on _NUM is R click
     {HN_RGHT, MS_RGHT}, // Shift arrown os _NUM is mouse movement
     {HN_LEFT, MS_LEFT},
     {HN_UP, MS_UP},
-    {HN_DOWN, MS_DOWN},
-    
+    {HN_DOWN, MS_DOWN}, 
 };
 
 uint8_t NUM_CUSTOM_SHIFT_KEYS =
@@ -279,7 +216,7 @@ uint8_t NUM_CUSTOM_SHIFT_KEYS =
 #define HD_Screencap_keys HD_A, HD_I // Capture screen
 #define HD_wcap_keys      HD_T, HD_A // Toggle caps word
 #define HD_ques_keys      HD_SLSH, HD_DQUO // ?
-#define HD_exlm_keys      HD_DOT, HD_SLSH // !
+#define HD_exlm_keys      TD(TD_DOT), HD_SLSH // !
 #define HD_guilmet_keys HD_DQUO, HD_QUOT // « | »
 
 // h digraph combos - all use original key + neighbor
@@ -297,6 +234,12 @@ uint8_t NUM_CUSTOM_SHIFT_KEYS =
 #define in_the_keys KC_BSPC, HD_I, HD_T // Type "in the"
 #define dcom_keys    HD_U,    HD_O // Type ".com"
 #define dfr_keys     HD_O,    HD_Y // Type ".fr"
+
+// "Adaptive keys""
+#define au_keys      HD_A, HD_H // Type "au"
+#define ua_keys      HD_U, HD_H // Type "ua"
+#define eo_keys      HD_E, HD_H // Type "eo"
+#define oe_keys      HD_O, HD_H // Type "oe"
 
 // These definitions based on Hands Down Neu & variations
 const uint16_t PROGMEM Caps_word_combo[] = {HD_wcap_keys, COMBO_END}; // Toggle Caps Word
@@ -319,6 +262,11 @@ const uint16_t PROGMEM BSPC_H_COMBO[]   = {here_keys,   COMBO_END};
 const uint16_t PROGMEM BSPC_I_COMBO[]   = {in_the_keys, COMBO_END};
 const uint16_t PROGMEM DCOM_COMBO[]   = {dcom_keys, COMBO_END};
 const uint16_t PROGMEM DFR_COMBO[]   = {dfr_keys, COMBO_END};
+// "Adaptive keys"
+const uint16_t PROGMEM AU_COMBO[]   = {au_keys,  COMBO_END};
+const uint16_t PROGMEM UA_COMBO[]   = {ua_keys,  COMBO_END};
+const uint16_t PROGMEM EO_COMBO[]   = {eo_keys,  COMBO_END};
+const uint16_t PROGMEM OE_COMBO[]   = {oe_keys,  COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(Screencap_combo, HC_SCAP),
@@ -341,117 +289,14 @@ combo_t key_combos[] = {
     COMBO(BSPC_I_COMBO, BSPCIT_IN_THE),
     COMBO(DCOM_COMBO, DCOM),
     COMBO(DFR_COMBO, DFR),
+    // "Adaptive keys"
+    COMBO(AU_COMBO, HC_AU),
+    COMBO(UA_COMBO, HC_UA),
+    COMBO(EO_COMBO, HC_EO),
+    COMBO(OE_COMBO, HC_OE),
 };
 
-void process_combo_event(uint16_t combo_index, bool pressed) {
-  switch(combo_index) {
-    case HC_SCAP:
-      if (pressed) {
-        uint8_t mod_state = get_mods();
-        uint8_t oneshot_mod_state = get_oneshot_mods();
-        if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
-                    unregister_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    tap_code16(HD_FSCAP);
-                    register_mods(mod_state);
-        }
-        else {
-            tap_code16(HD_SCAP);
-        }
-      }
-      break;
-    case HC_CW_TOGG:
-      if (pressed) {
-        tap_code16(CW_TOGG);
-      }
-      break;
-    case HC_EXLM:
-      if (pressed) {
-        tap_code16(KC_EXLM);
-      }
-      break;
-    case HC_QUES:
-      if (pressed) {
-        tap_code16(KC_QUES);
-      }
-      break;
-    case HC_PIPE:
-      if (pressed) {
-        tap_code16(KC_PIPE);
-      }
-      break;
-    case HC_GLMETS:
-        if (pressed) {
-            SEND_STRING("«  »");
-            tap_code16(KC_LEFT);
-            tap_code16(KC_LEFT);
-        }
-        break;        
-    case HC_CH:
-      if (pressed) {
-        SEND_STRING("ch");
-      }
-      break;
-    case HC_SCH:
-      if (pressed) {
-        SEND_STRING("sch");
-      }
-      break;
-    case HC_GH:
-      if (pressed) {
-        SEND_STRING("gh");
-      }
-      break;
-    case HC_PH:
-      if (pressed) {
-        SEND_STRING("ph");
-      }
-      break;
-    case HC_TH:
-      if (pressed) {
-        SEND_STRING("th");
-      }
-      break;
-    case HC_SH:
-      if (pressed) {
-        SEND_STRING("sh");
-      }
-      break;
-    case HC_WH:
-      if (pressed) {
-        SEND_STRING("wh");
-      }
-      break;
 
-    case BSPCEV_EVERY:
-        if (pressed) {
-            SEND_STRING("every");
-        }
-    break;
-
-    case BSPCH_HERE:
-        if (pressed) {
-            SEND_STRING("here");
-        }
-    break;
-
-    case BSPCIT_IN_THE:
-        if (pressed) {
-            SEND_STRING("in the");
-        }
-    break;
-    case DCOM:
-        if (pressed) {
-            SEND_STRING(".com");
-        }
-    break;
-    case DFR:
-        if (pressed) {
-            SEND_STRING(".fr");
-        }
-    break;
-  }
-}
 
 // Custom combo timing
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
@@ -505,24 +350,251 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uint8_t mod_state = get_mods();
     uint8_t oneshot_mod_state = get_oneshot_mods();
 
-    // Process achordion to determine holds
-   
+    // Process achordion to determine holds   
     if (!process_achordion(keycode, record)) { return false; }
 
     // Process custom shift keys
     if (!process_custom_shift_keys(keycode, record)) { 
         return false; 
     }
-    // Handle QU tap-hold
+   
     switch (keycode) {
-        case HD_QU:
+         // define combos
+        case HC_SCAP:
             if (record->event.pressed) {
-                SEND_STRING("qu");
+                tap_code16(HD_SCAP);
             }
             return false;
-        case HD_Q: // Qu on tap, Q on long press
-            return process_tap_or_long_press_key(record, KC_Q);
-        // shift = to != in _NUM
+        case HC_CW_TOGG:
+            if (record->event.pressed) {
+                caps_word_on();
+            }
+            return false;
+        case HC_EXLM:
+            if (record->event.pressed) {
+                tap_code16(KC_EXLM);
+            }
+            return false;
+        case HC_QUES:
+            if (record->event.pressed) {
+                tap_code16(KC_QUES);
+            }
+            return false;
+        case HC_PIPE:
+            if (record->event.pressed) {
+                tap_code16(KC_PIPE);
+            }
+            return false;
+        case HC_GLMETS:
+            if (record->event.pressed) {
+                tap_code16(HD_LGMT);  // «
+                tap_code16(KC_SPACE);
+                tap_code16(KC_SPACE);
+                tap_code16(HD_RGMT);  // »
+                tap_code16(KC_LEFT);
+                tap_code16(KC_LEFT);
+            }
+            return false;        
+        case HC_CH:
+            if (record->event.pressed) {
+                // Check if Caps Word is active
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_C));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_C);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+        case HC_SCH:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_S));
+                    tap_code16(S(KC_C));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_S);
+                    tap_code16(KC_C);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+        case HC_GH:
+            if (record->event.pressed) {
+               if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_G));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_G);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+        case HC_PH:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_P));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_P);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+        case HC_TH:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_T));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_T);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+        case HC_SH:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_C));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_S);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+        case HC_WH:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_W));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_W);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
+
+        case BSPCEV_EVERY:
+            if (record->event.pressed) {
+                SEND_STRING("every");
+            }
+            return false;
+
+        case BSPCH_HERE:
+            if (record->event.pressed) {
+                SEND_STRING("here");
+            }
+            return false;
+
+        case BSPCIT_IN_THE:
+            if (record->event.pressed) {
+                SEND_STRING("in the");
+            }
+            return false;
+        case DCOM:
+            if (record->event.pressed) {
+                SEND_STRING(".com");
+            }
+            return false;
+        case DFR:
+            if (record->event.pressed) {
+                SEND_STRING(".fr");
+            }
+            return false;
+        case Q_QU:
+            if (record->tap.count > 0) {    // Key is being tapped.
+                if (record->event.pressed) {
+                    if (is_caps_word_on()) {
+                        // Send uppercase letters using the Shift modifier
+                        tap_code16(S(KC_Q));
+                        tap_code16(S(KC_U));
+                    } else {
+                        // Send lowercase letters
+                        tap_code16(KC_Q);
+                        tap_code16(KC_U);
+                    }
+                }
+            } else { // Key is being held.
+                if (record->event.pressed) {
+                    if (is_caps_word_on()) {
+                        // Send uppercase letters using the Shift modifier
+                        tap_code16(S(KC_Q));
+                    } else {
+                    // Send lowercase letters
+                    tap_code16(KC_Q);
+                    }
+                }
+            }
+            return false;  // Skip default handling.
+        // "Adaptive keys"
+        case HC_AU:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_A));
+                    tap_code16(S(KC_U));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_A);
+                    tap_code16(KC_U);
+                }
+            }
+            return false;
+        case HC_UA:
+            if (record->event.pressed) {
+               if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_U));
+                    tap_code16(S(KC_A));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_U);
+                    tap_code16(KC_A);
+                }
+            }
+            return false;
+        case HC_EO:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_E));
+                    tap_code16(S(KC_O));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_E);
+                    tap_code16(KC_O);
+                }
+            }
+            return false;
+        case HC_OE:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_O));
+                    tap_code16(S(KC_E));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_O);
+                    tap_code16(KC_E);
+                }
+            }
+            return false;
         case HN_EQL:
             if (record->event.pressed) {
                 if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
@@ -544,6 +616,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case SELLINE:  // Selects the current line.
             if (record->event.pressed) {
                 SEND_STRING(SS_LCTL("a" SS_LSFT("e")));
+            }
+            return false;
+        case SELWD:  // Selects the current word.
+            if (record->event.pressed) {
+                tap_code16(LALT(KC_LEFT));
+                tap_code16(LALT(LSFT(KC_RIGHT)));
             }
             return false;
         case HS_LABK:
@@ -587,62 +665,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case HD_EURO:
             if (record->event.pressed) {
-                tap_code16(UNI_TOG);
-                tap_code16(UC(0x20AC));
-                tap_code16(UNI_TOG);
+                tap_code16(LALT(LSFT(KC_2)));
             }
             return false;
         case HD_PND:
             if (record->event.pressed) {
-                tap_code16(UNI_TOG);
-                tap_code16(UC(0x00A3));
-                tap_code16(UNI_TOG);
+                tap_code16(LALT(KC_3));
             }
             return false;
         case HD_YEN:
             if (record->event.pressed) {
-                tap_code16(UNI_TOG);
-                tap_code16(UC(0x00A5));
-                tap_code16(UNI_TOG);
-            }
-            return false;
-        case HD_NATUR:
-            if (record->event.pressed) {
-                tap_code16(UNI_TOG);
-                tap_code16(UC(0x266E));
-                tap_code16(UNI_TOG);
-            }
-            return false;
-        case HD_FLAT:
-            if (record->event.pressed) {
-                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
-                    unregister_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    tap_code16(UNI_TOG);
-                    tap_code16(UC(0xD834));
-                    tap_code16(UC(0xDD2B));
-                    tap_code16(UNI_TOG);
-                    register_mods(mod_state);
-                }
-                tap_code16(UNI_TOG);
-                tap_code16(UC(0x266D));
-                tap_code16(UNI_TOG);
-            }
-            return false; 
-        case HD_SHARP:
-            if (record->event.pressed) {
-                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
-                    unregister_mods(MOD_MASK_SHIFT);
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    tap_code16(UNI_TOG);
-                    tap_code16(UC(0xD834));
-                    tap_code16(UC(0xDD2A));
-                    tap_code16(UNI_TOG);
-                    register_mods(mod_state);
-                }
-                tap_code16(UNI_TOG);
-                tap_code16(UC(0x266F));
-                tap_code16(UNI_TOG);
+                tap_code16(LALT(KC_Y));
             }
             return false;
         case WIN_L3:
@@ -671,15 +704,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-    }  
-
-    // process adaptive keys - move earlier ??
-    if (!process_adaptive_key(keycode, record)) {
-            prior_keydown = timer_read(); // (re)start prior_key timing
-            preprior_keycode = prior_keycode; // look back 2 keystrokes?
-            prior_keycode = keycode; // this keycode is stripped of mods+taps
-            return false; // took care of that key
-        }
+    }
     return true;
 }
 
@@ -711,7 +736,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_TAB,   HD_W,    HD_X,    HD_M,    HD_G,    HD_J,                      HD_HASH, TD(TD_DOT), HD_SLSH, HD_DQUO, HD_QUOT, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_QU,    HD_C,    HD_S,    HD_N,    HD_T,    HD_K,                        HD_COMM,  HD_A,    HD_E,    HD_I,    HD_H,   HD_Z, 
+      Q_QU,     HD_C,    HD_S,    HD_N,    HD_T,    HD_K,                        HD_COMM,  HD_A,    HD_E,    HD_I,    HD_H,   HD_Z, 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       HD_LSFT,  HD_P,    HD_F,    HD_L,    HD_D,    HD_V,                        HD_MINS,  HD_U,    HD_O,    HD_Y,    HD_B,   HD_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -721,11 +746,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NUM] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_NO,   KC_NO,   SELLINE, SELW_L,  SELW_R,  SEL_A,                        HD_CIRC,  HD_HASH, HD_PERC, HD_DLR, HD_COLN, HD_EXLM, 
+      KC_NO,   SELLINE, SELW_L,  SELWD,   SELW_R,  SEL_A,                        HD_CIRC,  HD_HASH, HD_PERC, HD_DLR, HD_COLN, HD_EXLM, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB,  KC_PGUP, HN_HOME, HN_UP,   HN_END,  D_SCRL,                       HD_SLSH,  HN_7,   KC_8,    HN_9,   KC_MINS,  KC_BSPC,
+      KC_TAB,  KC_PGUP, HN_HOME, KC_UP,   HN_END,  D_SCRL,                       HD_SLSH,  HN_7,   KC_8,    HN_9,   KC_MINS,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_NO,   KC_PGDN, HN_LEFT, HN_DOWN, HN_RGHT, U_SCRL,                       HD_ASTR,  HN_4,   HN_5,    HN_6,   HN_PLUS,  KC_DEL,
+      KC_NO,   KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, U_SCRL,                       HD_ASTR,  HN_4,   HN_5,    HN_6,   HN_PLUS,  KC_DEL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       HD_LSFT, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                      HD_COMM,  KC_1,   KC_2,    KC_3,   HN_EQL,   HD_RSFT, 
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -737,11 +762,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC, KC_GRV,  HD_LPRN, HD_RPRN, HD_SCLN, HD_COMM,                      KC_NO,  HD_EURO,  HD_PND,  HD_YEN,  KC_NO,   KC_NO, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_EXLM, HD_LCBR, HD_LBRC, HD_RBRC, HD_RCBR, HD_QUES,                      UPDIR,   KC_BSPC, KC_TAB,  HD_AT,   KC_NO,   HD_SHARP,
+      HD_EXLM, HD_LCBR, HD_LBRC, HD_RBRC, HD_RCBR, HD_QUES,                      UPDIR,   KC_BSPC, KC_TAB,  HD_AT,   KC_NO,   KC_NO,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_HASH, HD_CIRC, HN_EQL,  HD_UNDS, HD_DLR,  HD_ASTR,                      HD_COLN, KC_RSFT, UNAME,   KC_AMPR, KC_ENT,  HD_NATUR,
+      HD_HASH, HD_CIRC, HN_EQL,  HD_UNDS, HD_DLR,  HD_ASTR,                      HD_COLN, KC_RSFT, UNAME,   KC_AMPR, KC_ENT,  KC_NO,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_TILD, HS_LABK, HD_PIPE, HD_MINS, HS_RABK, HD_BSLS,                      HD_DOT,  KC_DEL,  HD_BTAB, HD_PERC, KC_RSFT, HD_FLAT, 
+      HD_TILD, HS_LABK, HD_PIPE, HD_MINS, HS_RABK, HD_BSLS,                      HD_DOT,  KC_DEL,  HD_BTAB, HD_PERC, KC_RSFT, KC_NO, 
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           HD_SLSH, HD_SPC, MO(_EXT),     KC_TRNS,  KC_NO,   KC_NO
                                       //`--------------------------'  `--------------------------'

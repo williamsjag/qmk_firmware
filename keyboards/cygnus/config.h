@@ -19,13 +19,6 @@ see <http://www.gnu.org/licenses/>.
 /* Select hand configuration */
 #define MASTER_LEFT
 
-// #define MATRIX_ROWS 5
-// #define MATRIX_COLS 6
-
-// #define MATRIX_ROW_PINS { GP28, GP27, GP26, GP15, GP14 }
-// #define MATRIX_COL_PINS { GP3, GP4, GP5, GP6, GP7, GP8 }
-// #define SERIAL_USART_TX_PIN GP1
-
 //Serial settings
 #define USE_SERIAL
 #define SOFT_SERIAL_PIN GP1
@@ -34,6 +27,7 @@ see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_TOGGLE 2
 #define TAPPING_TERM 170
+
 // https://github.com/moutis/HandsDown/blob/main/moutis.h
 #define ADAPTIVE_TERM (TAPPING_TERM/4) // rolling threshold for adaptive keys
 
@@ -43,15 +37,10 @@ see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 #define CAPS_WORD_INVERT_ON_SHIFT
 
-// Unicode settings
-#define UNICODE_KEY_MAC KC_LEFT_ALT
-#define UNICODE_TYPE_DELAY 0
-#define UNICODE_SELECTED_MODES UNICODE_MODE_MACOS
-
 /* Don't apply custom shift keys on layer 0 (QWERTY) */
 #define CUSTOM_SHIFT_KEYS_LAYER_MASK ~(1 << 0)
 
 #define ACHORDION_STREAK
 
-
-
+#define UNICODE_KEY_MAC KC_LEFT_ALT
+#define UNICODE_TYPE_DELAY 50
