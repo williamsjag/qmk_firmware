@@ -47,53 +47,14 @@ void dance_esc_layer_boot(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-static void sentence_end(tap_dance_state_t *state, void *user_data) {
-    switch (state->count) {
-        
-        // Tapping TD_DOT produces
-        // ". <one-shot-shift>" i.e. dot, space and capitalize next letter.
-        // This helps to quickly end a sentence and begin another one
-        // without having to hit shift.
-        case 1:
-            /* Check that Shift is inactive */
-            if (!(get_mods() & MOD_MASK_SHIFT)) {
-                tap_code(KC_DOT);
-                tap_code(KC_SPC);
-                /* Internal code of OSM(MOD_LSFT) */
-                add_oneshot_mods(MOD_BIT(KC_LEFT_SHIFT));
-
-            } else {
-                // send normal (shifted) keycode
-                tap_code(KC_DOT);
-            }
-            break;
-        case 2:
-            // Type a single dot
-            tap_code(KC_DOT);
-            break;
-        // Three dots ellipsis.
-        case 3:
-            // type a dot
-            tap_code(KC_DOT);
-            // add a second dot
-            tap_code(KC_DOT);
-            // tap the third dot
-            tap_code(KC_DOT);
-            break;
-    }
-};
-
-void sentence_end_finished (tap_dance_state_t *state, void *user_data) {
-}
-
 // Define Tap Dance Actions
 tap_dance_action_t tap_dance_actions[] = {
     [TD_ESC_LAYER_BOOT] = ACTION_TAP_DANCE_FN(dance_esc_layer_boot),
-    [TD_DOT] = ACTION_TAP_DANCE_FN(sentence_end),
+    // [TD_DOT] = ACTION_TAP_DANCE_FN(sentence_end),
 };
 
 // Not strictly a tap dance, but related
-// Helper for implementing tap vs. long-press keys if I ever implement any. Given a tap-hold
+// Helper for implementing tap vs. long-press keys for simple keycodes if I ever implement any. Given a tap-hold
 // key event, replaces the hold function with `long_press_keycode`.
 // static bool process_tap_or_long_press_key(
 //     keyrecord_t* record, uint16_t long_press_keycode) {
@@ -104,84 +65,7 @@ tap_dance_action_t tap_dance_actions[] = {
 //     return false;  // Skip default handling.
 //   }
 //   return true;  // Continue default handling.
-//}
-
-///////////////////////////////////////////////////////////////////////////////
-// Caps Word (https://docs.qmk.fm/features/caps_word)
-///////////////////////////////////////////////////////////////////////////////
-
-bool caps_word_press_user(uint16_t keycode) {
-  switch (keycode) {
-    // Keycodes that continue Caps Word, with shift applied.
-    case KC_A ... KC_Z:
-    case KC_MINS:
-    case Q_QU:
-    case HC_AU:
-      add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to the next key.
-      return true;
-
-    // Keycodes that continue Caps Word, without shifting.
-    case KC_1 ... KC_0:
-    case KC_BSPC:
-    case KC_DEL:
-    case KC_UNDS:
-      return true;
-
-    default:
-      return false;  // Deactivate Caps Word.
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Hands Down Adaptive Keys (https://sites.google.com/alanreiser.com/handsdown/home/hands-down-neu)
-///////////////////////////////////////////////////////////////////////////////
-
-// Adaptive graveyard
-// MAGIC HASH
-
-//         case HD_HASH: // Magic HD_HASH
-//             switch (prior_keycode) {
-//                 case HD_D: // "does"
-//                     SEND_STRING("oes");
-//                     return_state = false;
-//                     break;
-//                 case HD_F: // "for"
-//                     SEND_STRING("or");
-//                     return_state = false;
-//                     break;
-//                 case HD_H: // "have"
-//                     SEND_STRING("ave");
-//                     return_state = false;
-//                     break;
-//                 case HD_J: // "just"
-//                     SEND_STRING("ust");
-//                     return_state = false;
-//                     break;
-//                 case HD_K: // "know"
-//                     SEND_STRING("now");
-//                     return_state = false;
-//                     break;
-//                 case HD_M: // "ment"
-//                     SEND_STRING("ent");
-//                     return_state = false;
-//                     break;
-//                 case HD_S: // "sion"
-//                     SEND_STRING("ion");
-//                     return_state = false;
-//                     break;
-//                 case HD_T: // "tion"
-//                     SEND_STRING("ion");
-//                     return_state = false;
-//                     break;
-//                 case HD_W: // "williams"
-//                     SEND_STRING("illiams");
-//                     return_state = false;
-//                     break;
-//                 case HD_SPC: // "and"
-//                     SEND_STRING("and");
-//                     return_state = false;
-//                     break;
-
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Custom shift keys (https://getreuer.info/posts/keyboards/custom-shift-keys)
@@ -192,16 +76,13 @@ const custom_shift_key_t custom_shift_keys[] = {
     {HD_MINS, HD_PLUS}, // Shift - is +
     {HD_COMM, HD_SCLN}, // Shift , is ;
     {HD_HASH, HD_DLR}, // Shift # is $
-    {TD(TD_DOT), HD_COLN}, // Shift . is :
+    {EOS, HD_COLN}, // Shift . is :
+    {HD_DOT, HD_COLN}, // Shift . is :
     {HD_SLSH, HD_ASTR}, // Shift / is *
     {HD_DQUO, HD_LBRC}, // Shift " is [
     {HD_QUOT, HD_RBRC}, // Shift ' is ]
     {HN_HOME, MS_BTN1}, // Shift Home on _NUM is L click
     {HN_END, MS_BTN2}, // Shift End on _NUM is R click
-    {HN_RGHT, MS_RGHT}, // Shift arrown os _NUM is mouse movement
-    {HN_LEFT, MS_LEFT},
-    {HN_UP, MS_UP},
-    {HN_DOWN, MS_DOWN}, 
 };
 
 uint8_t NUM_CUSTOM_SHIFT_KEYS =
@@ -211,30 +92,51 @@ uint8_t NUM_CUSTOM_SHIFT_KEYS =
 // Combos (https://docs.qmk.fm/features/combo)
 ///////////////////////////////////////////////////////////////////////////////
 
+enum combos {
+    TA_CWORD,
+    EXLM,
+    QUES,
+    AE_PIPE,
+    AE_PIPE2,
+    AI_SCAP,
+    GLMETS,
+    ST_CH,
+    CSN_SCH,
+    MG_GH,
+    PF_PH,
+    TN_TH,
+    SN_SH,
+    TSC_TCH,
+    WX_WH,
+    UO_COM,
+    OY_FR,
+    AH_AU,
+    UH_UA,
+    EH_EO,
+    OH_OE,
+    COMBO_LENGTH
+};
+
 // Punctuation and function
-#define HD_pipe_keys      HD_A, HD_E // Type "|"
+#define HD_pipe_keys      HD_A, HD_E // Type "|" 
+#define HS_pipe_keys      HS_SCLN, HN_EQL // Type "|"
 #define HD_Screencap_keys HD_A, HD_I // Capture screen
 #define HD_wcap_keys      HD_T, HD_A // Toggle caps word
 #define HD_ques_keys      HD_SLSH, HD_DQUO // ?
-#define HD_exlm_keys      TD(TD_DOT), HD_SLSH // !
+#define HD_exlm_keys      EOS, HD_SLSH // !
 #define HD_guilmet_keys HD_DQUO, HD_QUOT // « | »
-
 // h digraph combos - all use original key + neighbor
 #define HD_Th_keys HD_T, HD_N // Type "th"
 #define HD_Sh_keys HD_S, HD_N // Type "sh"
-#define HD_Ch_keys HD_C, HD_S // Type "ch"
+#define HD_Ch_keys HD_T, HD_S // Type "ch"
 #define HD_Wh_keys HD_W, HD_X // Type "wh"
 #define HD_Ph_keys HD_P, HD_F // Type "ph"
 #define HD_Gh_keys HD_G, HD_M // Type "gh"
 #define HD_Sch_keys HD_S, HD_C, HD_N // Type "sch"
-
+#define HD_Tch_keys HD_C, HD_S, HD_T // Type "tch"
 // Common words
-#define every_keys  KC_BSPC, HD_E // Type "every"
-#define here_keys   KC_BSPC, HD_H // Type "here"
-#define in_the_keys KC_BSPC, HD_I, HD_T // Type "in the"
 #define dcom_keys    HD_U,    HD_O // Type ".com"
 #define dfr_keys     HD_O,    HD_Y // Type ".fr"
-
 // "Adaptive keys""
 #define au_keys      HD_A, HD_H // Type "au"
 #define ua_keys      HD_U, HD_H // Type "ua"
@@ -246,20 +148,20 @@ const uint16_t PROGMEM Caps_word_combo[] = {HD_wcap_keys, COMBO_END}; // Toggle 
 const uint16_t PROGMEM Hexlm_combo[]     = {HD_exlm_keys, COMBO_END}; // !
 const uint16_t PROGMEM Hques_combo[]     = {HD_ques_keys, COMBO_END}; // ?
 const uint16_t PROGMEM Pipe_combo[]      = {HD_pipe_keys, COMBO_END}; // |
+const uint16_t PROGMEM Pipe_combo2[]      = {HS_pipe_keys, COMBO_END}; // |
 const uint16_t PROGMEM Screencap_combo[] = {HD_Screencap_keys, COMBO_END}; // Screen Capture
 const uint16_t PROGMEM Guilmet_combo[]   = {HD_guilmet_keys, COMBO_END}; // « | »
 // H digraph combos (these are mnemonically arranged- first letter + neighbor)
-const uint16_t PROGMEM H_Th_combo[]  = {HD_Th_keys, COMBO_END}; // TYPE "th"
 const uint16_t PROGMEM H_Ch_combo[]  = {HD_Ch_keys, COMBO_END}; // TYPE "ch"
-const uint16_t PROGMEM H_Wh_combo[]  = {HD_Wh_keys, COMBO_END}; // TYPE "wh"
-const uint16_t PROGMEM H_Sh_combo[]  = {HD_Sh_keys, COMBO_END}; // TYPE "sh"
-const uint16_t PROGMEM H_Ph_combo[]  = {HD_Ph_keys, COMBO_END}; // TYPE "ph"
-const uint16_t PROGMEM H_Gh_combo[]  = {HD_Gh_keys, COMBO_END}; // TYPE "gh"
 const uint16_t PROGMEM H_Sch_combo[] = {HD_Sch_keys, COMBO_END}; // TYPE "Sch"
+const uint16_t PROGMEM H_Gh_combo[]  = {HD_Gh_keys, COMBO_END}; // TYPE "gh"
+const uint16_t PROGMEM H_Ph_combo[]  = {HD_Ph_keys, COMBO_END}; // TYPE "ph"
+const uint16_t PROGMEM H_Th_combo[]  = {HD_Th_keys, COMBO_END}; // TYPE "th"
+const uint16_t PROGMEM H_Sh_combo[]  = {HD_Sh_keys, COMBO_END}; // TYPE "sh"
+const uint16_t PROGMEM H_Wh_combo[]  = {HD_Wh_keys, COMBO_END}; // TYPE "wh"
+const uint16_t PROGMEM H_Tch_combo[] = {HD_Tch_keys, COMBO_END}; // TYPE "Sch"
+
 // Common word combos
-const uint16_t PROGMEM BSPC_E_COMBO[]   = {every_keys,  COMBO_END};
-const uint16_t PROGMEM BSPC_H_COMBO[]   = {here_keys,   COMBO_END};
-const uint16_t PROGMEM BSPC_I_COMBO[]   = {in_the_keys, COMBO_END};
 const uint16_t PROGMEM DCOM_COMBO[]   = {dcom_keys, COMBO_END};
 const uint16_t PROGMEM DFR_COMBO[]   = {dfr_keys, COMBO_END};
 // "Adaptive keys"
@@ -269,46 +171,77 @@ const uint16_t PROGMEM EO_COMBO[]   = {eo_keys,  COMBO_END};
 const uint16_t PROGMEM OE_COMBO[]   = {oe_keys,  COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(Screencap_combo, HC_SCAP),
-    COMBO(Caps_word_combo, HC_CW_TOGG),
-    COMBO(Hexlm_combo, HC_EXLM), // !
-    COMBO(Hques_combo, HC_QUES), // ?
-    COMBO(Pipe_combo, HC_PIPE), // |
-    COMBO(Guilmet_combo, HC_GLMETS), // « | »
+    [TA_CWORD] = COMBO(Caps_word_combo, HC_CW_TOGG),
+    [EXLM]     = COMBO(Hexlm_combo, HC_EXLM), // !
+    [QUES]     = COMBO(Hques_combo, HC_QUES), // ?
+    [AE_PIPE]  = COMBO(Pipe_combo, HC_PIPE), // |
+    [AE_PIPE2] = COMBO(Pipe_combo2, HC_PIPE), // |
+    [AI_SCAP]  = COMBO(Screencap_combo, HC_SCAP),
+    [GLMETS]   = COMBO(Guilmet_combo, HC_GLMETS), // « | »
     // H bigrams
-    COMBO(H_Ch_combo, HC_CH),
-    COMBO(H_Sch_combo, HC_SCH),
-    COMBO(H_Gh_combo, HC_GH),
-    COMBO(H_Ph_combo, HC_PH),
-    COMBO(H_Th_combo, HC_TH),
-    COMBO(H_Sh_combo, HC_SH),
-    COMBO(H_Wh_combo, HC_WH),
+    [ST_CH]    = COMBO(H_Ch_combo, HC_CH),
+    [CSN_SCH]  = COMBO(H_Sch_combo, HC_SCH),
+    [MG_GH]    = COMBO(H_Gh_combo, HC_GH),
+    [PF_PH]    = COMBO(H_Ph_combo, HC_PH),
+    [TN_TH]    = COMBO(H_Th_combo, HC_TH),
+    [SN_SH]    = COMBO(H_Sh_combo, HC_SH),
+    [WX_WH]    = COMBO(H_Wh_combo, HC_WH),
+    [TSC_TCH]  = COMBO(H_Tch_combo, HC_TCH),
     // Common word combos
-    COMBO(BSPC_E_COMBO, BSPCEV_EVERY),
-    COMBO(BSPC_H_COMBO, BSPCH_HERE),
-    COMBO(BSPC_I_COMBO, BSPCIT_IN_THE),
-    COMBO(DCOM_COMBO, DCOM),
-    COMBO(DFR_COMBO, DFR),
+    [UO_COM]   = COMBO(DCOM_COMBO, DCOM),
+    [OY_FR]    = COMBO(DFR_COMBO, DFR),
     // "Adaptive keys"
-    COMBO(AU_COMBO, HC_AU),
-    COMBO(UA_COMBO, HC_UA),
-    COMBO(EO_COMBO, HC_EO),
-    COMBO(OE_COMBO, HC_OE),
+    [AH_AU]    = COMBO(AU_COMBO, HC_AU),
+    [UH_UA]    = COMBO(UA_COMBO, HC_UA),
+    [EH_EO]    = COMBO(EO_COMBO, HC_EO),
+    [OH_OE]    = COMBO(OE_COMBO, HC_OE),
 };
 
-
-
 // Custom combo timing
-uint16_t get_combo_term(uint16_t index, combo_t *combo) {
-    switch (index) {
-        case HC_PIPE:
-            return 30;
-        case HC_SCAP:
-            return 30;
+uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
+    switch (combo_index) {
+        case AE_PIPE:
+        case AE_PIPE2:
+        case AI_SCAP:
+            return 20;
+        case AH_AU:
+        case UH_UA:
+        case EH_EO:
+        case OH_OE:
+            return 200;
+        default:
+            return COMBO_TERM;
     }
-    return COMBO_TERM;
 }
 
+bool get_combo_must_press_in_order(uint16_t combo_index, combo_t *combo) {
+    switch (combo_index) {
+        case AH_AU:
+        case UH_UA:
+        case EH_EO:
+        case OH_OE:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool get_combo_must_tap(uint16_t combo_index, combo_t *combo) {
+    // Make *all* combos, that have Mod-Tap/Layer-Tap/Momentary keys in its chord, to be tap-only 
+    uint16_t key;
+    uint8_t idx = 0;
+    while ((key = pgm_read_word(&combo->keys[idx])) != COMBO_END) {
+        switch (key) {
+            case QK_MOD_TAP...QK_MOD_TAP_MAX:
+            case QK_LAYER_TAP...QK_LAYER_TAP_MAX:
+            case QK_MOMENTARY...QK_MOMENTARY_MAX:
+                return true;
+        }
+        idx += 1;
+    }
+    return false;
+
+}
 ///////////////////////////////////////////////////////////////////////////////
 // Achordion (https://getreuer.info/posts/keyboards/achordion)
 ///////////////////////////////////////////////////////////////////////////////
@@ -340,13 +273,12 @@ uint16_t achordion_streak_chord_timeout(
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // process_record_user
 ///////////////////////////////////////////////////////////////////////////////
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // Save mod state for later use
+    // Save mod state for 
     uint8_t mod_state = get_mods();
     uint8_t oneshot_mod_state = get_oneshot_mods();
 
@@ -362,7 +294,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          // define combos
         case HC_SCAP:
             if (record->event.pressed) {
-                tap_code16(HD_SCAP);
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    tap_code16(HD_FSCAP);
+                } else {
+                     tap_code16(HD_SCAP);
+                }
             }
             return false;
         case HC_CW_TOGG:
@@ -424,6 +362,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+        case HC_TCH:
+            if (record->event.pressed) {
+                if (is_caps_word_on()) {
+                    // Send uppercase letters using the Shift modifier
+                    tap_code16(S(KC_T));
+                    tap_code16(S(KC_C));
+                    tap_code16(S(KC_H));
+                } else {
+                    // Send lowercase letters
+                    tap_code16(KC_T);
+                    tap_code16(KC_C);
+                    tap_code16(KC_H);
+                }
+            }
+            return false;
         case HC_GH:
             if (record->event.pressed) {
                if (is_caps_word_on()) {
@@ -467,7 +420,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 if (is_caps_word_on()) {
                     // Send uppercase letters using the Shift modifier
-                    tap_code16(S(KC_C));
+                    tap_code16(S(KC_S));
                     tap_code16(S(KC_H));
                 } else {
                     // Send lowercase letters
@@ -487,24 +440,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(KC_W);
                     tap_code16(KC_H);
                 }
-            }
-            return false;
-
-        case BSPCEV_EVERY:
-            if (record->event.pressed) {
-                SEND_STRING("every");
-            }
-            return false;
-
-        case BSPCH_HERE:
-            if (record->event.pressed) {
-                SEND_STRING("here");
-            }
-            return false;
-
-        case BSPCIT_IN_THE:
-            if (record->event.pressed) {
-                SEND_STRING("in the");
             }
             return false;
         case DCOM:
@@ -542,6 +477,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;  // Skip default handling.
+        case EOS:  // Period on tap, Period/␣/OSM_SHIFT on long press.
+            if (record->tap.count > 0) {    // Key is being tapped.
+                if (record->event.pressed) {
+                    tap_code16(HD_DOT);
+                }
+            // handle long press if held
+            } else { // Key is being held.
+                if (record->event.pressed) {
+                    if (!(get_mods() & MOD_MASK_SHIFT)) {
+                        tap_code(HD_DOT);
+                        tap_code(KC_SPC);
+                        /* Internal code of OSM(MOD_LSFT) */
+                        add_oneshot_mods(MOD_BIT(KC_LEFT_SHIFT));
+                    } else {
+                        tap_code16(KC_COLN);
+                    }
+                }
+            }
+            return false;
         // "Adaptive keys"
         case HC_AU:
             if (record->event.pressed) {
@@ -663,6 +617,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+        case RNAME:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT || oneshot_mod_state & MOD_MASK_SHIFT) {
+                    unregister_mods(MOD_MASK_SHIFT);
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("Jackson Williams");
+                    register_mods(mod_state);
+                }
+                else {
+                    SEND_STRING("Jackson");
+                }
+            }
+            return false;
+        case LSFT_T(HR_RPRN):
+            if (record->tap.count && record->event.pressed) {      // Check if the key was tapped (not held for shift)
+                tap_code16(KC_RPRN); // Send ';' when tapped
+            }
+            return false; // Skip further processing
+        case LCTL_T(HN_PLUS):
+            if (record->tap.count && record->event.pressed) {      // Check if the key was tapped (not held for shift)
+                tap_code16(KC_PLUS); // Send '+' when tapped
+            }
+            return false; // Skip further processing
         case HD_EURO:
             if (record->event.pressed) {
                 tap_code16(LALT(LSFT(KC_2)));
@@ -704,6 +681,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+        case KC_TAB:
+            if ((mod_state & MOD_MASK_GUI) && (mod_state & MOD_MASK_ALT)) {
+                unregister_mods(mod_state);
+                tap_code16(G(KC_GRV));
+                return false;
+            }
     }
     return true;
 }
@@ -734,7 +717,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       TD(TD_ESC_LAYER_BOOT), KC_1, KC_2, KC_3, KC_4, KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  TD(TD_ESC_LAYER_BOOT), 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB,   HD_W,    HD_X,    HD_M,    HD_G,    HD_J,                      HD_HASH, TD(TD_DOT), HD_SLSH, HD_DQUO, HD_QUOT, KC_BSPC,
+      KC_TAB,   HD_W,    HD_X,    HD_M,    HD_G,    HD_J,                        HD_HASH,  EOS,     HD_SLSH, HD_DQUO, HD_QUOT, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       Q_QU,     HD_C,    HD_S,    HD_N,    HD_T,    HD_K,                        HD_COMM,  HD_A,    HD_E,    HD_I,    HD_H,   HD_Z, 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -760,15 +743,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_SYM] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_ESC, KC_GRV,  HD_LPRN, HD_RPRN, HD_SCLN, HD_COMM,                      KC_NO,  HD_EURO,  HD_PND,  HD_YEN,  KC_NO,   KC_NO, 
+      KC_ESC,  KC_NO,   KC_NO,   HD_QUOT, HD_DQUO, KC_NO,                        HD_DLR,  HD_EURO,  HD_PND,  HD_YEN,  KC_NO,  KC_DEL, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_EXLM, HD_LCBR, HD_LBRC, HD_RBRC, HD_RCBR, HD_QUES,                      UPDIR,   KC_BSPC, KC_TAB,  HD_AT,   KC_NO,   KC_NO,
+      KC_TAB,  KC_GRV,  HD_CIRC, HD_LBRC, HD_RBRC, HD_HASH,                      UPDIR,   HD_QUES, HD_SLSH,  HD_PERC, KC_NO,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_HASH, HD_CIRC, HN_EQL,  HD_UNDS, HD_DLR,  HD_ASTR,                      HD_COLN, KC_RSFT, UNAME,   KC_AMPR, KC_ENT,  KC_NO,
+      KC_NO,   HS_LABK, HS_RABK, HD_LPRN, HS_RPRN, HD_UNDS,                      HD_COLN, HS_SCLN, HN_EQL,   HD_AMPR, UNAME,  KC_ENT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_TILD, HS_LABK, HD_PIPE, HD_MINS, HS_RABK, HD_BSLS,                      HD_DOT,  KC_DEL,  HD_BTAB, HD_PERC, KC_RSFT, KC_NO, 
+      KC_NO,   KC_NO,   HD_EXLM, HD_LCBR, HD_RCBR, HD_COMM,                      KC_DOT,  HD_TILD, HD_MINS,  HD_AT,   RNAME,  KC_NO, 
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          HD_SLSH, HD_SPC, MO(_EXT),     KC_TRNS,  KC_NO,   KC_NO
+                                          KC_BSLS, HD_SPC, MO(_EXT),     KC_TRNS,  KC_NO,   KC_NO
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -776,9 +759,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC,  CAP_PG,  WIN_L3,  WIN_L2,  WIN_R2,  WIN_R3,                       MUTE,   MUS_PRE,  PLAY,    MUS_NEX, V_DOWN,  V_UP,
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB, B_TAB_P, B_TAB_N, B_BRWS,  F_BRWS,  KC_PGUP,                       DOCST,   HN_HOME, HN_UP,   HN_END,  DEFINE,  KC_BSPC,
+      KC_TAB, B_TAB_P, B_TAB_N, B_BRWS,  F_BRWS,  KC_PGUP,                       DOCST,   MS_BTN1, MS_UP,   MS_BTN2,  DEFINE,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      GPT,    KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, KC_PGDN,                       DOCEND,  HN_LEFT, HN_DOWN, HN_RGHT, TSLATE,  KC_DEL, 
+      GPT,    KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, KC_PGDN,                       DOCEND,  MS_LEFT, MS_DOWN, MS_RGHT, TSLATE,  KC_DEL, 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
      HD_REDO, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                       PWORD,   ZM_IN,   ZM_RST,  ZM_OUT,  HELP,    HD_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|

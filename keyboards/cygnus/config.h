@@ -28,19 +28,23 @@ see <http://www.gnu.org/licenses/>.
 #define TAPPING_TOGGLE 2
 #define TAPPING_TERM 170
 
-// https://github.com/moutis/HandsDown/blob/main/moutis.h
-#define ADAPTIVE_TERM (TAPPING_TERM/4) // rolling threshold for adaptive keys
+
 
 /* Home row mods */
 #define TAP_CODE_DELAY 10
 #define TAP_HOLD_CAPS_DELAY 10
 #define PERMISSIVE_HOLD
+
 #define CAPS_WORD_INVERT_ON_SHIFT
 
 /* Don't apply custom shift keys on layer 0 (QWERTY) */
 #define CUSTOM_SHIFT_KEYS_LAYER_MASK ~(1 << 0)
+// Don't apply custom shift keys with command
+#define CUSTOM_SHIFT_KEYS_NEGMODS MOD_BIT(KC_LGUI)
 
 #define ACHORDION_STREAK
 
-#define UNICODE_KEY_MAC KC_LEFT_ALT
-#define UNICODE_TYPE_DELAY 50
+#define COMBO_TERM_PER_COMBO 1
+#define COMBO_MUST_PRESS_IN_ORDER_PER_COMBO
+#define COMBO_MUST_TAP_PER_COMBO
+

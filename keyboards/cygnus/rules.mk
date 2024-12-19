@@ -27,7 +27,7 @@ EXTRAKEY_ENABLE = yes
 COMBO_ENABLE = yes
 CAPS_WORD_ENABLE = yes
 UNICODE_ENABLE = yes
-UNICODE_COMMON = yes
+NKRO_ENABLE = yes
 
 LTO_ENABLE = no # must be disabled for rp2040 builds
 

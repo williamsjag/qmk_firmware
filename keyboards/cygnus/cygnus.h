@@ -32,50 +32,29 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HC_PH,
     HC_TH,
     HC_SH,
-    HC_WH, 
+    HC_WH,
+    HC_TCH, 
     SK_QU,
+    SK_DOT,
     UPDIR,
-    /* SELW_R,
-    SELW_L, */
     SELLINE,
     SELWD, 
-    HN_EQL, // _NUM = for shift macro
     HS_LABK, // _SYM < for shift macro
     HS_RABK, // _SYM > for shift macro
-    // _NUM for mouse buttons   
-    /* HN_HOME, 
-    HN_END,
-    HN_UP,
-    HN_LEFT,
-    HN_DOWN,
-    HN_RGHT,
-    // _EXT
-    B_BRWS,
-    F_BRWS,
-    U_SCRL,
-    D_SCRL,
-    DOCST,
-    DOCEND,
-    ZM_IN,
-    ZM_OUT,
-    ZM_RST,
-    WIN_L,
-    WIN_R,
-    DEFINE,
-    HELP,  
-    HD_UNDO,
-    HD_REDO,
-    HD_CUT,
-    HD_COPY,
-    HD_PSTE,
-    HD_PSTM, */
     UNAME,
+    RNAME,
+    HR_RPRN,
+    HR_PLUS,
     HD_EURO,
     HD_PND,
     HD_YEN,
     HD_SHARP,
     HD_NATUR,
     HD_FLAT,
+    HE_UP,
+    HE_DOWN,
+    HE_LEFT,
+    HE_RGHT,
 };
 
 // Hands Down alphas with hold-taps and custom codes
@@ -97,6 +76,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_P KC_P
 #define HD_Q KC_Q
 #define Q_QU LT(0, SK_QU)
+#define EOS  LT(0, SK_DOT)
 #define HD_R KC_R
 #define HD_S LALT_T(KC_S)
 #define HD_T LSFT_T(KC_T)
@@ -106,8 +86,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_X KC_X
 #define HD_Y KC_Y
 #define HD_Z KC_Z
-#define HD_LSFT LSFT_T(OSM(KC_LSFT))
-#define HD_RSFT RSFT_T(OSM(KC_RSFT))
+#define HD_LSFT OSM(MOD_LSFT)
+#define HD_RSFT OSM(MOD_RSFT)
 // Symbols
 #define HD_DOT  KC_DOT  // .
 #define HD_MINS KC_MINS // -
@@ -150,7 +130,6 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HN_4      RSFT_T(KC_4)
 #define HN_5      RGUI_T(KC_5)
 #define HN_6      RALT_T(KC_6)
-#define HN_PLUS   RCTL_T(KC_PLUS)
 #define HN_7      KC_7 
 #define HN_9      KC_9
 #define HD_SCAP   LGUI(LSFT(KC_4))
@@ -203,12 +182,15 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define GPT       LCTL(LALT(LGUI(KC_SPC)))
 #define B_TAB_P   LGUI(LALT(KC_UP))
 #define B_TAB_N   LGUI(LALT(KC_DOWN))
+#define HS_SCLN   RSFT_T(KC_SCLN)
+#define HN_EQL    RGUI_T(HD_EQL)
+#define HS_RPRN   LSFT_T(HR_RPRN)
+#define HN_PLUS   LCTL_T(HR_PLUS)
+#define HD_AMPR   RALT_T(KC_AMPR)
+
 
 // Tap Dance keys
 // Tap Dance definitions
 enum {
     TD_ESC_LAYER_BOOT = 0,
-    TD_DOT,
 };
-// #define TD_ESC TD(TD_ESC_LAYER_BOOT)
-// #define TD_DOT TD(TD_DOT)
