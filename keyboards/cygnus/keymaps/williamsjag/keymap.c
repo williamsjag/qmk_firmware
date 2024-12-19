@@ -717,11 +717,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       TD(TD_ESC_LAYER_BOOT), KC_1, KC_2, KC_3, KC_4, KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  TD(TD_ESC_LAYER_BOOT), 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB,   HD_W,    HD_X,    HD_M,    HD_G,    HD_J,                        HD_HASH,  EOS,     HD_SLSH, HD_DQUO, HD_QUOT, KC_BSPC,
+      KC_TAB,   HD_X,    HD_W,    HD_M,    HD_G,    HD_J,                        HD_HASH,  EOS,     HD_SLSH, HD_DQUO, HD_QUOT, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      Q_QU,     HD_C,    HD_S,    HD_N,    HD_T,    HD_K,                        HD_COMM,  HD_A,    HD_E,    HD_I,    HD_H,   HD_Z, 
+      Q_QU,     HD_S,    HD_C,    HD_N,    HD_T,    HD_K,                        HD_COMM,  HD_A,    HD_E,    HD_I,    HD_H,   HD_Z, 
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      HD_LSFT,  HD_P,    HD_F,    HD_L,    HD_D,    HD_V,                        HD_MINS,  HD_U,    HD_O,    HD_Y,    HD_B,   HD_RSFT,
+      HD_LSFT,  HD_F,    HD_P,    HD_L,    HD_D,    HD_V,                        HD_MINS,  HD_U,    HD_O,    HD_Y,    HD_B,   HD_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_BSPC,  HD_R,  MO(_NUM),   MO(_SYM), KC_SPC,  KC_ENT
                                       //`--------------------------'  `--------------------------'
