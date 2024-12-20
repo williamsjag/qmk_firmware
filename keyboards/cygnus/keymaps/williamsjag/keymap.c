@@ -9,7 +9,6 @@
 
 #define ____ KC_TRNS
 
-
 // Custom keycode definitions found in cygnus.h
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,6 +52,16 @@ tap_dance_action_t tap_dance_actions[] = {
     // [TD_DOT] = ACTION_TAP_DANCE_FN(sentence_end),
 };
 
+// Set longer tapping term for tap dances
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case QK_TAP_DANCE ... QK_TAP_DANCE_MAX:
+            return 275;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
 // Not strictly a tap dance, but related
 // Helper for implementing tap vs. long-press keys for simple keycodes if I ever implement any. Given a tap-hold
 // key event, replaces the hold function with `long_press_keycode`.
@@ -83,6 +92,9 @@ const custom_shift_key_t custom_shift_keys[] = {
     {HD_QUOT, HD_RBRC}, // Shift ' is ]
     {HN_HOME, MS_BTN1}, // Shift Home on _NUM is L click
     {HN_END, MS_BTN2}, // Shift End on _NUM is R click
+    {U_SCRL, L_SCRL}, // Shift up scroll is left scroll
+    {D_SCRL, R_SCRL}, // Shift down scroll is right scroll
+    {HD_UNDO, HD_REDO},
 };
 
 uint8_t NUM_CUSTOM_SHIFT_KEYS =
@@ -117,7 +129,7 @@ enum combos {
     COMBO_LENGTH
 };
 
-// Punctuation and function
+// RH Punctuation and function
 #define HD_pipe_keys      HD_A, HD_E // Type "|" 
 #define HS_pipe_keys      HS_SCLN, HN_EQL // Type "|"
 #define HD_Screencap_keys HD_A, HD_I // Capture screen
@@ -125,15 +137,15 @@ enum combos {
 #define HD_ques_keys      HD_SLSH, HD_DQUO // ?
 #define HD_exlm_keys      EOS, HD_SLSH // !
 #define HD_guilmet_keys HD_DQUO, HD_QUOT // « | »
-// h digraph combos - all use original key + neighbor
+// LH h digraph combos - all use original key + neighbor
 #define HD_Th_keys HD_T, HD_N // Type "th"
-#define HD_Sh_keys HD_S, HD_N // Type "sh"
-#define HD_Ch_keys HD_T, HD_S // Type "ch"
-#define HD_Wh_keys HD_W, HD_X // Type "wh"
-#define HD_Ph_keys HD_P, HD_F // Type "ph"
+#define HD_Sh_keys HD_T, HD_C // Type "sh"
+#define HD_Ch_keys HD_N, HD_C // Type "ch"
+#define HD_Wh_keys HD_W, HD_M // Type "wh"
+#define HD_Ph_keys HD_P, HD_L // Type "ph"
 #define HD_Gh_keys HD_G, HD_M // Type "gh"
 #define HD_Sch_keys HD_S, HD_C, HD_N // Type "sch"
-#define HD_Tch_keys HD_C, HD_S, HD_T // Type "tch"
+#define HD_Tch_keys HD_C, HD_N, HD_T // Type "tch"
 // Common words
 #define dcom_keys    HD_U,    HD_O // Type ".com"
 #define dfr_keys     HD_O,    HD_Y // Type ".fr"
@@ -245,6 +257,7 @@ bool get_combo_must_tap(uint16_t combo_index, combo_t *combo) {
 ///////////////////////////////////////////////////////////////////////////////
 // Achordion (https://getreuer.info/posts/keyboards/achordion)
 ///////////////////////////////////////////////////////////////////////////////
+
 // Define shift and gui as eager for accordion
 bool achordion_eager_mod(uint8_t mod) {
   switch (mod) {
@@ -274,6 +287,31 @@ uint16_t achordion_streak_chord_timeout(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// CAPS WORD (https://docs.qmk.fm/features/caps_word)
+///////////////////////////////////////////////////////////////////////////////
+
+// customization for caps word if necessary
+// bool caps_word_press_user(uint16_t keycode) {
+//     switch (keycode) {
+//         // Keycodes that continue Caps Word, with shift applied.
+//         case KC_A ... KC_Z:
+//         case KC_MINS:
+//             add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
+//             return true;
+
+//         // Keycodes that continue Caps Word, without shifting.
+//         case KC_1 ... KC_0:
+//         case KC_BSPC:
+//         case KC_DEL:
+//         case KC_UNDS:
+//             return true;
+
+//         default:
+//             return false;  // Deactivate Caps Word.
+//     }
+// }
+
+///////////////////////////////////////////////////////////////////////////////
 // process_record_user
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -290,6 +328,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false; 
     }
    
+
     switch (keycode) {
          // define combos
         case HC_SCAP:
@@ -483,7 +522,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(HD_DOT);
                 }
             // handle long press if held
-            } else { // Key is being held.
+            } else { // Key is being long pressed.
                 if (record->event.pressed) {
                     if (!(get_mods() & MOD_MASK_SHIFT)) {
                         tap_code(HD_DOT);
@@ -743,7 +782,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_SYM] = LAYOUT(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_ESC,  KC_NO,   KC_NO,   HD_QUOT, HD_DQUO, KC_NO,                        HD_DLR,  HD_EURO,  HD_PND,  HD_YEN,  KC_NO,  KC_DEL, 
+      KC_ESC,  KC_NO,   KC_NO,   HD_QUOT, HD_DQUO, KC_NO,                        HD_EURO, HD_DLR,  HD_PND,   HD_YEN,  KC_NO,  KC_DEL, 
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_TAB,  KC_GRV,  HD_CIRC, HD_LBRC, HD_RBRC, HD_HASH,                      UPDIR,   HD_QUES, HD_SLSH,  HD_PERC, KC_NO,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
