@@ -60,7 +60,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 // Hands Down alphas with hold-taps and custom codes
 #define HD_A RSFT_T(KC_A)
 #define HD_B KC_B
-#define HD_C LCTL_T(KC_C)
+#define HD_C LALT_T(KC_C)
 #define HD_D KC_D
 #define HD_E RGUI_T(KC_E)
 #define HD_F KC_F
@@ -78,7 +78,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define Q_QU LT(0, SK_QU)
 #define EOS  LT(0, SK_DOT)
 #define HD_R KC_R
-#define HD_S LALT_T(KC_S)
+#define HD_S LCTL_T(KC_S)
 #define HD_T LSFT_T(KC_T)
 #define HD_U KC_U
 #define HD_V KC_V
@@ -147,6 +147,8 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define DOCST     LGUI(KC_UP)
 #define U_SCRL    MS_WHLU
 #define D_SCRL    MS_WHLD
+#define L_SCRL    MS_WHLL
+#define R_SCRL    MS_WHLR
 #define F_BRWS    LGUI(KC_RBRC)
 #define B_BRWS    LGUI(KC_LBRC)
 #define HN_HOME   KC_HOME
