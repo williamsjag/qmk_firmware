@@ -27,7 +27,7 @@ see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_TOGGLE 2
 #define TAPPING_TERM 170
-
+#define TAPPING_TERM_PER_KEY #define TAPPING_TERM_PER_KEY 1
 
 
 /* Home row mods */
@@ -38,7 +38,7 @@ see <http://www.gnu.org/licenses/>.
 #define CAPS_WORD_INVERT_ON_SHIFT
 
 /* Don't apply custom shift keys on layer 0 (QWERTY) */
-#define CUSTOM_SHIFT_KEYS_LAYER_MASK ~(1 << 0)
+#define CUSTOM_SHIFT_KEYS_LAYER_MASK ~(1 << 1)
 // Don't apply custom shift keys with command
 #define CUSTOM_SHIFT_KEYS_NEGMODS MOD_BIT(KC_LGUI)
 

@@ -2,8 +2,8 @@
 
 
 enum layers {
-    _QWERTY,
     _HD,
+    _QWERTY,
     _NUM,
     _SYM,
     _EXT
@@ -33,14 +33,16 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HC_TH,
     HC_SH,
     HC_WH,
-    HC_TCH, 
+    HC_TCH,
     SK_QU,
     SK_DOT,
+    SK_5,
+    SK_6,
     UPDIR,
     SELLINE,
-    SELWD, 
-    HS_LABK, // _SYM < for shift macro
-    HS_RABK, // _SYM > for shift macro
+    SELWD,
+    HS_LABK_dummy, // _SYM < for shift macro
+    HS_RABK_dummy, // _SYM > for shift macro
     UNAME,
     RNAME,
     HR_RPRN,
@@ -55,6 +57,11 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     HE_DOWN,
     HE_LEFT,
     HE_RGHT,
+    HS_RPRN_dummy,
+    HS_LPRN_dummy,
+    HD_UNAME_dummy,
+    HD_AMPR_dummy,
+    HN_PLUS_dummy,
 };
 
 // Hands Down alphas with hold-taps and custom codes
@@ -106,7 +113,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_LPRN KC_LPRN // (
 #define HD_RPRN KC_RPRN // )
 #define HD_CIRC KC_CIRC // ^
-#define HD_TILD KC_TILD // ~ 
+#define HD_TILD KC_TILD // ~
 #define HD_LCBR KC_LCBR // {
 #define HD_RCBR KC_RCBR // }
 #define HD_SLSH KC_SLSH // /
@@ -120,17 +127,19 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_ENT  KC_ENT  // ↵
 #define HD_QUOT KC_QUOT // '
 #define HD_DQUO KC_DQUO // "
-#define HD_ASTR KC_ASTR // *    
+#define HD_ASTR KC_ASTR // *
 #define HD_COMM KC_COMM // ,
 #define HD_UNDS KC_UNDS // _
 #define HD_LGMT LALT(KC_BSLS)
 #define HD_RGMT LALT(LSFT(KC_BSLS))
 
 // Layer special keys
+#define HR_5      LT(0, SK_5)
+#define HR_6      LT(0, SK_6)
 #define HN_4      RSFT_T(KC_4)
 #define HN_5      RGUI_T(KC_5)
 #define HN_6      RALT_T(KC_6)
-#define HN_7      KC_7 
+#define HN_7      KC_7
 #define HN_9      KC_9
 #define HD_SCAP   LGUI(LSFT(KC_4))
 #define HD_FSCAP  LGUI(LSFT(KC_3))
@@ -186,13 +195,16 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define B_TAB_N   LGUI(LALT(KC_DOWN))
 #define HS_SCLN   RSFT_T(KC_SCLN)
 #define HN_EQL    RGUI_T(HD_EQL)
-#define HS_RPRN   LSFT_T(HR_RPRN)
-#define HN_PLUS   LCTL_T(HR_PLUS)
-#define HD_AMPR   RALT_T(KC_AMPR)
-
+#define HS_RPRN   LSFT_T(HS_RPRN_dummy)
+#define HN_PLUS   LCTL_T(HN_PLUS_dummy)
+#define HD_AMPR   RALT_T(HD_AMPR_dummy)
+#define HD_UNAME  RCTL_T(HD_UNAME_dummy)
+#define HS_LPRN   LGUI_T(HS_LPRN_dummy)
+#define HS_RABK   LALT_T(HS_RABK_dummy)
+#define HS_LABK   LCTL_T(HS_LABK_dummy)
 
 // Tap Dance keys
 // Tap Dance definitions
 enum {
-    TD_ESC_LAYER_BOOT = 0,
+    TD_ESC_LAYER_BOOT,
 };
