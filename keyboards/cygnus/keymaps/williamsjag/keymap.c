@@ -127,6 +127,7 @@ enum combos {
     TSC_TCH,
     WX_WH,
     UO_COM,
+    YOU_GML,
     OY_FR,
     AH_AU,
     UH_UA,
@@ -155,6 +156,7 @@ enum combos {
 // Common words
 #define dcom_keys    HD_U,    HD_O // Type ".com"
 #define dfr_keys     HD_O,    HD_Y // Type ".fr"
+#define gmail_keys   HD_Y, HD_O, HD_U // Type "@gmail.com"
 // "Adaptive keys""
 #define au_keys      HD_A, HD_H // Type "au"
 #define ua_keys      HD_U, HD_H // Type "ua"
@@ -180,8 +182,9 @@ const uint16_t PROGMEM H_Wh_combo[]  = {HD_Wh_keys, COMBO_END}; // TYPE "wh"
 const uint16_t PROGMEM H_Tch_combo[] = {HD_Tch_keys, COMBO_END}; // TYPE "Sch"
 
 // Common word combos
-const uint16_t PROGMEM DCOM_COMBO[]   = {dcom_keys, COMBO_END};
+const uint16_t PROGMEM DCOM_COMBO[]  = {dcom_keys, COMBO_END};
 const uint16_t PROGMEM DFR_COMBO[]   = {dfr_keys, COMBO_END};
+const uint16_t PROGMEM GMAIL_COMBO[] = {gmail_keys, COMBO_END};
 // "Adaptive keys"
 const uint16_t PROGMEM AU_COMBO[]   = {au_keys,  COMBO_END};
 const uint16_t PROGMEM UA_COMBO[]   = {ua_keys,  COMBO_END};
@@ -208,6 +211,7 @@ combo_t key_combos[] = {
     // Common word combos
     [UO_COM]   = COMBO(DCOM_COMBO, DCOM),
     [OY_FR]    = COMBO(DFR_COMBO, DFR),
+    [YOU_GML]  = COMBO(GMAIL_COMBO, GMAIL),
     // "Adaptive keys"
     [AH_AU]    = COMBO(AU_COMBO, HC_AU),
     [UH_UA]    = COMBO(UA_COMBO, HC_UA),
@@ -498,6 +502,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
                 // reset button
+        case GMAIL:
+            if (record->event.pressed) {
+                SEND_STRING("@gmail.com");
+            }
+            return false;
         case HR_5: // Hold to reset keyboard
             if (record->tap.count > 0) {    // Key is being tapped.
                 if (record->event.pressed) {
@@ -872,7 +881,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_EXT] = LAYOUT(
  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_ESC, WIN_L3,  WIN_L2,  WIN_R2,  WIN_R3,  CAP_PG,                        MUTE,   MUS_PRE,  PLAY,    MUS_NEX, V_DOWN,  V_UP,
+      KC_ESC, WIN_L3,  WIN_L2,  WIN_R2,  WIN_R3,  WIN_C,                        MUTE,   MUS_PRE,  PLAY,    MUS_NEX, V_DOWN,  V_UP,
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_TAB, B_TAB_P, B_TAB_N, B_BRWS,  F_BRWS,  KC_PGUP,                       DOCST,   MS_BTN1, MS_UP,   MS_BTN2,  DEFINE,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|

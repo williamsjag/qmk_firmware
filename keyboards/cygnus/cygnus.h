@@ -26,6 +26,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
     BSPCIT_IN_THE,
     DCOM,
     DFR,
+    GMAIL,
     HC_CH,
     HC_SCH,
     HC_GH,
@@ -175,7 +176,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define SELW_L    LALT(LSFT(KC_LEFT))
 #define SELW_R    LALT(LSFT(KC_RGHT))
 #define SEL_A     LGUI(KC_A)
-#define CAP_PG    LSFT(LGUI(KC_2))
+#define WIN_C     LALT(LCTL(KC_UP))
 #define WIN_L3    LCTL(LALT(KC_D))
 #define WIN_R3    LCTL(LALT(KC_G))
 #define WIN_L23   LCTL(LALT(KC_E))
