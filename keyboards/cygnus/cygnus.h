@@ -1,4 +1,4 @@
-#pragma once
+pragma once
 
 
 enum layers {
@@ -135,6 +135,7 @@ enum custom_keycodes { // Define custom keycodes for use in combos/macros
 #define HD_RGMT LALT(LSFT(KC_BSLS))
 
 // Layer special keys
+#define EMOJI     LCTL(LGUI(KC_SPC))
 #define HR_5      LT(0, SK_5)
 #define HR_6      LT(0, SK_6)
 #define HN_4      RSFT_T(KC_4)

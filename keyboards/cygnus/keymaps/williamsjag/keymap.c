@@ -513,7 +513,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(KC_5);
                 }
             } else {
-                reset_keyboard();
+r               reset_keyboard();
             }
             return false;
         case HR_6: // Hold to reset keyboard
@@ -869,7 +869,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       KC_ESC,  KC_NO,   KC_NO,   HD_QUOT, HD_DQUO, KC_NO,                        HD_EURO, HD_DLR,  HD_PND,   HD_YEN,  KC_NO,  KC_DEL,
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB,  KC_GRV,  HD_CIRC, HD_LBRC, HD_RBRC, HD_HASH,                      UPDIR,   HD_QUES, HD_SLSH,  HD_PERC, KC_NO,  KC_BSPC,
+      KC_TAB,  KC_GRV,  HD_CIRC, HD_LBRC, HD_RBRC, HD_HASH,                      UPDIR,   HD_QUES, HD_SLSH,  HD_PERC, EMOJI,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_NO,   HS_LABK, HS_RABK, HS_LPRN, HS_RPRN, HD_UNDS,                      HD_COLN, HS_SCLN, HN_EQL,   HD_AMPR, HD_UNAME, KC_ENT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
