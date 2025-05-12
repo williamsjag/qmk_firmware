@@ -40,9 +40,6 @@ void dance_esc_layer_boot(tap_dance_state_t *state, void *user_data) {
                 tap_code(KC_BSPC);
             }
         }
-    } else if (state->count == 5) {
-        // Five taps: Send QK_BOOT (reboot to bootloader)
-        reset_keyboard();
     }
 }
 
@@ -513,7 +510,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     tap_code16(KC_5);
                 }
             } else {
-r               reset_keyboard();
+               reset_keyboard();
             }
             return false;
         case HR_6: // Hold to reset keyboard
@@ -881,13 +878,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_EXT] = LAYOUT(
  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      KC_ESC, WIN_L3,  WIN_L2,  WIN_R2,  WIN_R3,  WIN_C,                        MUTE,   MUS_PRE,  PLAY,    MUS_NEX, V_DOWN,  V_UP,
+      KC_ESC, WIN_L3,  WIN_L2,  WIN_C,   WIN_R2,  WIN_R3,                        MUTE,   MUS_PRE,  PLAY,    MUS_NEX, V_DOWN,  V_UP,
   //,--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TAB, B_TAB_P, B_TAB_N, B_BRWS,  F_BRWS,  KC_PGUP,                       DOCST,   MS_BTN1, MS_UP,   MS_BTN2,  DEFINE,  KC_BSPC,
+      KC_ESC, WIN_L3,  WIN_L2,  WIN_C,   WIN_R2,  WIN_R3,                        DOCST,   MS_BTN1, MS_UP,   MS_BTN2,  DEFINE,  KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      GPT,    KC_LCTL, KC_LALT, KC_LGUI, KC_LSFT, KC_PGDN,                       DOCEND,  MS_LEFT, MS_DOWN, MS_RGHT, TSLATE,  KC_DEL,
+      KC_TAB, B_TAB_P, B_TAB_N, B_BRWS,  F_BRWS,  GPT,                           DOCEND,  MS_LEFT, MS_DOWN, MS_RGHT, TSLATE,  KC_DEL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-     KC_NO, HD_UNDO, HD_CUT,  HD_COPY, HD_PSTE, HD_PSTM,                       PWORD,   ZM_IN,   ZM_RST,  ZM_OUT,  HELP,    HD_RSFT,
+      HR_5,   SELLINE, SELW_L,  SELWD,   SELW_R,  SEL_A,                         PWORD,   ZM_IN,   ZM_RST,  ZM_OUT,  HELP,    HR_6,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                            KC_NO,   KC_NO,  KC_TRNS,    KC_TRNS, KC_NO,   KC_NO
                                       //`--------------------------'  `--------------------------'
