@@ -26,7 +26,7 @@ see <http://www.gnu.org/licenses/>.
 #define SERIAL_PIO_USE_PIO1
 
 #define TAPPING_TOGGLE 2
-#define TAPPING_TERM 200
+#define TAPPING_TERM 250
 #define TAPPING_TERM_PER_KEY #define TAPPING_TERM_PER_KEY 1
 
 
